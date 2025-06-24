@@ -33,44 +33,44 @@ class BleActivity : AppCompatActivity(), YJCallBack {
 
         setTitle(R.string.bluetooth)
 
-        typeList.add("蓝牙列表")
-        typeList.add("获取设备信息")
-        typeList.add("获取设备屏幕信息")
-        typeList.add("获取设备亮度")
-        typeList.add("清屏")
+        typeList.add(getString(R.string.bluetooth_list))
+        typeList.add(getString(R.string.get_device_info))
+        typeList.add(getString(R.string.get_screen_info))
+        typeList.add(getString(R.string.get_brightness))
+        typeList.add(getString(R.string.clear_screen))
 
-        typeList.add("纯文字")
-        typeList.add("一字一色")
-        typeList.add("二字一色")
-        typeList.add("一行一色")
+        typeList.add(getString(R.string.text_only))
+        typeList.add(getString(R.string.one_char_one_color))
+        typeList.add(getString(R.string.two_char_one_color))
+        typeList.add(getString(R.string.one_line_one_color))
 
-        typeList.add("文字-背景图")
-        typeList.add("文字-背景GIF")
+        typeList.add(getString(R.string.text_bg_image))
+        typeList.add(getString(R.string.text_bg_gif))
 
-        typeList.add("文字-前景图")
-        typeList.add("文字-前景GIF")
+        typeList.add(getString(R.string.text_fg_image))
+        typeList.add(getString(R.string.text_fg_gif))
 
-        typeList.add("图片")
-        typeList.add("GIF")
-
-
-        typeList.add("组合-上文下图")
-        typeList.add("组合-上文下GIF")
-        typeList.add("组合-上文下图-炫彩字体")
-        typeList.add("组合-上文下GIF-炫彩字体")
-
-        typeList.add("组合-上图下文")
-        typeList.add("组合-上GIF下文")
-        typeList.add("组合-上图下文-炫彩字体")
-        typeList.add("组合-上GIF下文-炫彩字体")
+        typeList.add(getString(R.string.picture))
+        typeList.add(getString(R.string.gif))
 
 
-        typeList.add("组合-文字")
-        typeList.add("组合-多文字")
+        typeList.add(getString(R.string.combo_text_top_img_bottom))
+        typeList.add(getString(R.string.combo_text_top_gif_bottom))
+        typeList.add(getString(R.string.combo_text_top_img_bottom_colorful))
+        typeList.add(getString(R.string.combo_text_top_gif_bottom_colorful))
 
-        typeList.add("设置亮度")
-        typeList.add("删除指定节目")
-        typeList.add("断开连接")
+        typeList.add(getString(R.string.combo_img_top_text_bottom))
+        typeList.add(getString(R.string.combo_gif_top_text_bottom))
+        typeList.add(getString(R.string.combo_img_top_text_bottom_colorful))
+        typeList.add(getString(R.string.combo_gif_top_text_bottom_colorful))
+
+
+        typeList.add(getString(R.string.combo_text))
+        typeList.add(getString(R.string.combo_multi_text))
+
+        typeList.add(getString(R.string.set_brightness))
+        typeList.add(getString(R.string.delete_program))
+        typeList.add(getString(R.string.disconnect))
 
         bleAdapter = BleAdapter(this,typeList)
         rc_ble.layoutManager = LinearLayoutManager(this)
@@ -82,7 +82,7 @@ class BleActivity : AppCompatActivity(), YJCallBack {
                 when(position){
                     0 -> {
                         if (!BluetoothAdapter.getDefaultAdapter().isEnabled) {
-                            Toast.makeText(this@BleActivity,"请打开蓝牙",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@BleActivity, getString(R.string.enable_bluetooth), Toast.LENGTH_SHORT).show()
                             BluetoothAdapter.getDefaultAdapter().enable()
                         }else startActivity(Intent(this@BleActivity,ScanBleActivity::class.java))
                     }
@@ -177,7 +177,7 @@ class BleActivity : AppCompatActivity(), YJCallBack {
     override fun disConnected() {
         runOnUiThread {
             ScanBleActivity.yjBleDevice = null
-            tv_result.text = "设备断开连接"
+            tv_result.text = getString(R.string.device_disconnected)
         }
     }
 
@@ -185,13 +185,13 @@ class BleActivity : AppCompatActivity(), YJCallBack {
     override fun resultData(data: String, progress: Int,type: Int) {
         Log.e("--线程：",Thread.currentThread().name)
         runOnUiThread {
-            tv_result.text = "返回数据：\n${data}\n发送进度：${progress}%"
+            tv_result.text = String.format(getString(R.string.result_progress), data, progress)
         }
     }
 
     override fun sendFail(code: Int) {
         runOnUiThread {
-            tv_result.text = "发送失败: $code"
+            tv_result.text = String.format(getString(R.string.send_failed), code)
         }
     }
 

@@ -43,44 +43,44 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
         YJDeviceManager.instance.isWiFiDevice()
 
         typeList.clear()
-        typeList.add(TypeBean(1,"获取设备信息"))
-        typeList.add(TypeBean(2,"获取设备屏幕信息"))
-        typeList.add(TypeBean(3,"获取设备亮度"))
-        typeList.add(TypeBean(4,"清屏"))
-        typeList.add(TypeBean(5,"获取wifi密码"))
+        typeList.add(TypeBean(1, getString(R.string.get_device_info)))
+        typeList.add(TypeBean(2, getString(R.string.get_screen_info)))
+        typeList.add(TypeBean(3, getString(R.string.get_brightness)))
+        typeList.add(TypeBean(4, getString(R.string.clear_screen)))
+        typeList.add(TypeBean(5, getString(R.string.get_wifi_password)))
 
-        typeList.add(TypeBean(6,"纯文字"))
-        typeList.add(TypeBean(7,"一字一色"))
-        typeList.add(TypeBean(8,"二字一色"))
-        typeList.add(TypeBean(9,"一行一色"))
+        typeList.add(TypeBean(6, getString(R.string.text_only)))
+        typeList.add(TypeBean(7, getString(R.string.one_char_one_color)))
+        typeList.add(TypeBean(8, getString(R.string.two_char_one_color)))
+        typeList.add(TypeBean(9, getString(R.string.one_line_one_color)))
 
-        typeList.add(TypeBean(10,"文字-背景图"))
-        typeList.add(TypeBean(11,"文字-背景GIF"))
+        typeList.add(TypeBean(10, getString(R.string.text_bg_image)))
+        typeList.add(TypeBean(11, getString(R.string.text_bg_gif)))
 
-        typeList.add(TypeBean(12,"文字-前景图"))
-        typeList.add(TypeBean(13,"文字-前景GIF"))
+        typeList.add(TypeBean(12, getString(R.string.text_fg_image)))
+        typeList.add(TypeBean(13, getString(R.string.text_fg_gif)))
 
-        typeList.add(TypeBean(14,"图片"))
-        typeList.add(TypeBean(15,"GIF"))
-
-
-        typeList.add(TypeBean(16,"组合-上文下图"))
-        typeList.add(TypeBean(17,"组合-上文下GIF"))
-        typeList.add(TypeBean(18,"组合-上文下图-炫彩字体"))
-        typeList.add(TypeBean(19,"组合-上文下GIF-炫彩字体"))
-
-        typeList.add(TypeBean(20,"组合-上图下文"))
-        typeList.add(TypeBean(21,"组合-上GIF下文"))
-        typeList.add(TypeBean(22,"组合-上图下文-炫彩字体"))
-        typeList.add(TypeBean(23,"组合-上GIF下文-炫彩字体"))
+        typeList.add(TypeBean(14, getString(R.string.picture)))
+        typeList.add(TypeBean(15, getString(R.string.gif)))
 
 
-        typeList.add(TypeBean(24,"组合-文字"))
-        typeList.add(TypeBean(25,"组合-多文字"))
+        typeList.add(TypeBean(16, getString(R.string.combo_text_top_img_bottom)))
+        typeList.add(TypeBean(17, getString(R.string.combo_text_top_gif_bottom)))
+        typeList.add(TypeBean(18, getString(R.string.combo_text_top_img_bottom_colorful)))
+        typeList.add(TypeBean(19, getString(R.string.combo_text_top_gif_bottom_colorful)))
 
-        typeList.add(TypeBean(26,"设置亮度"))
-        typeList.add(TypeBean(27,"删除指定节目"))
-        typeList.add(TypeBean(28,"设置密码"))
+        typeList.add(TypeBean(20, getString(R.string.combo_img_top_text_bottom)))
+        typeList.add(TypeBean(21, getString(R.string.combo_gif_top_text_bottom)))
+        typeList.add(TypeBean(22, getString(R.string.combo_img_top_text_bottom_colorful)))
+        typeList.add(TypeBean(23, getString(R.string.combo_gif_top_text_bottom_colorful)))
+
+
+        typeList.add(TypeBean(24, getString(R.string.combo_text)))
+        typeList.add(TypeBean(25, getString(R.string.combo_multi_text)))
+
+        typeList.add(TypeBean(26, getString(R.string.set_brightness)))
+        typeList.add(TypeBean(27, getString(R.string.delete_program)))
+        typeList.add(TypeBean(28, getString(R.string.set_password)))
 
 
         wifiAdapter = WifiAdapter(this, typeList)
@@ -136,7 +136,7 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
 
                     28 -> {
                         if (oldPassword.isEmpty())
-                            ToastShow("请先获取wifi密码")
+                            ToastShow(getString(R.string.please_get_wifi_password))
                         else showSetPasswordDialog()
                     }
 
@@ -197,13 +197,13 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
                     else ""
             }
             Log.e("------wtf: ",data+"_"+type)
-            tv_result.text = "返回数据：\n${data}\n发送进度：${progress}%"
+            tv_result.text = String.format(getString(R.string.result_progress), data, progress)
         }
     }
 
     override fun sendFail(code: Int) {
         runOnUiThread {
-            tv_result.text = "发送失败: $code"
+            tv_result.text = String.format(getString(R.string.send_failed), code)
         }
     }
 
@@ -235,40 +235,40 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
                 )
 
                 if (view.et_old_password.text.toString().trim().isEmpty()){
-                    ToastShow("请输入旧密码")
+                    ToastShow(getString(R.string.enter_old_password))
                     return@setOnClickListener
                 }
 
                 if (view.et_new_password.text.toString().trim().isEmpty()){
-                    ToastShow("请输入新密码")
+                    ToastShow(getString(R.string.enter_new_password))
                     return@setOnClickListener
                 }
 
                 if (view.et_new_password_again.text.toString().trim().isEmpty()){
-                    ToastShow("请输入确认密码")
+                    ToastShow(getString(R.string.enter_confirm_password))
                     return@setOnClickListener
                 }
 
                 if (!view.et_new_password.text.toString().equals(view.et_new_password_again.text.toString())){
-                    ToastShow("输入新密码和确认密码不一致")
+                    ToastShow(getString(R.string.new_password_mismatch))
                     return@setOnClickListener
                 }
 
                 if (!oldPassword.equals(view.et_old_password.text.toString().trim())){
-                    ToastShow("旧密码错误")
+                    ToastShow(getString(R.string.old_password_error))
                     return@setOnClickListener
                 }
 
                 if (view.et_old_password.text.toString().trim().length < 8 ||
                     view.et_new_password.text.toString().trim().length < 8 ||
                     view.et_new_password_again.text.toString().trim().length < 8){
-                    ToastShow("密码长度最少8位")
+                    ToastShow(getString(R.string.password_min_length))
                     return@setOnClickListener
                 }
 
 
                 if (view.et_old_password.text.toString().trim().equals(view.et_new_password.text.toString().trim())){
-                    ToastShow("新密码和旧密码一致")
+                    ToastShow(getString(R.string.new_password_same))
                     return@setOnClickListener
                 }
 

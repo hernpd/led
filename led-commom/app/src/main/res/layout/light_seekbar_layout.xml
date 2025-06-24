@@ -7,7 +7,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="25dp"
-        android:text="设置亮度"
+        android:text="@string/set_brightness"
         android:gravity="center"/>
     <SeekBar
         android:id="@+id/seekbar"
@@ -34,7 +34,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:layout_height="35dp"
-            android:text="取消"
+            android:text="@string/cancel"
             android:background="#F2F2F2"
             android:textColor="@color/colorPrimary"/>
 
@@ -44,7 +44,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:layout_height="35dp"
-            android:text="确定"
+            android:text="@string/confirm"
             android:layout_marginLeft="15dp"
             android:background="#69C0FF"
             android:textColor="#ffffff"/>

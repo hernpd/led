@@ -11,13 +11,15 @@
         android:id="@+id/tv_wifi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="WiFi 设备"
+        android:text="@string/wifi_device"
+        android:background="@drawable/button_bg"
         tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/tv_ble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="蓝牙 设备"
+        android:text="@string/bluetooth_device"
+        android:background="@drawable/button_bg"
         tools:ignore="MissingConstraints" />
 </LinearLayout>
