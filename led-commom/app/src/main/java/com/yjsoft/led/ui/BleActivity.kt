@@ -20,16 +20,18 @@ import com.yjsoft.led.R
 import com.yjsoft.led.adapter.BleAdapter
 import com.yjsoft.led.adapter.WifiAdapter
 import com.yjsoft.led.util.ShowCmdUtil
-import kotlinx.android.synthetic.main.activity_ble.*
-import kotlinx.android.synthetic.main.light_seekbar_layout.view.*
+import com.yjsoft.led.databinding.ActivityBleBinding
+import com.yjsoft.led.databinding.LightSeekbarLayoutBinding
 import java.io.ByteArrayOutputStream
 
 class BleActivity : AppCompatActivity(), YJCallBack {
+    private lateinit var binding: ActivityBleBinding
     private var bleAdapter: BleAdapter? = null
     private val typeList = arrayListOf<String>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_ble)
+        binding = ActivityBleBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         setTitle(R.string.bluetooth)
 
@@ -73,12 +75,12 @@ class BleActivity : AppCompatActivity(), YJCallBack {
         typeList.add("연결 해제")
 
         bleAdapter = BleAdapter(this,typeList)
-        rc_ble.layoutManager = LinearLayoutManager(this)
-        rc_ble.adapter = bleAdapter
+        binding.rcBle.layoutManager = LinearLayoutManager(this)
+        binding.rcBle.adapter = bleAdapter
 
         bleAdapter?.setOnButtonClickListener(object : BleAdapter.OnButtonClickListener{
             override fun OnClickListener(position: Int) {
-                tv_result.text = ""
+                binding.tvResult.text = ""
                 when(position){
                     0 -> {
                         if (!BluetoothAdapter.getDefaultAdapter().isEnabled) {
@@ -177,7 +179,7 @@ class BleActivity : AppCompatActivity(), YJCallBack {
     override fun disConnected() {
         runOnUiThread {
             ScanBleActivity.yjBleDevice = null
-            tv_result.text = "장치 연결 해제"
+            binding.tvResult.text = "장치 연결 해제"
         }
     }
 
@@ -185,24 +187,24 @@ class BleActivity : AppCompatActivity(), YJCallBack {
     override fun resultData(data: String, progress: Int,type: Int) {
         Log.e("--线程：",Thread.currentThread().name)
         runOnUiThread {
-            tv_result.text = "수신 데이터:\n${data}\n전송 진행률:${progress}%"
+            binding.tvResult.text = "수신 데이터:\n${data}\n전송 진행률:${progress}%"
         }
     }
 
     override fun sendFail(code: Int) {
         runOnUiThread {
-            tv_result.text = "전송 실패: $code"
+            binding.tvResult.text = "전송 실패: $code"
         }
     }
 
     @SuppressLint("InflateParams")
     private fun showSetLightDialog(){
-        val view = LayoutInflater.from(this).inflate(R.layout.light_seekbar_layout,null)
-        val dialog = AlertDialog.Builder(this).setView(view).show()
-        view?.tv_cancel?.setOnClickListener { dialog.dismiss() }
-        view?.tv_confirm?.setOnClickListener {
+        val dialogBinding = LightSeekbarLayoutBinding.inflate(LayoutInflater.from(this))
+        val dialog = AlertDialog.Builder(this).setView(dialogBinding.root).show()
+        dialogBinding.tvCancel.setOnClickListener { dialog.dismiss() }
+        dialogBinding.tvConfirm.setOnClickListener {
             dialog.dismiss()
-            YJDeviceManager.instance.setLight(view.seekbar?.progress!! + 1)
+            YJDeviceManager.instance.setLight(dialogBinding.seekbar.progress + 1)
         }
     }
 }

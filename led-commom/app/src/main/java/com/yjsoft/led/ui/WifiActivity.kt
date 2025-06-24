@@ -19,24 +19,26 @@ import com.yjsoft.led.adapter.WifiAdapter
 import com.yjsoft.led.bean.TypeBean
 import com.yjsoft.led.bean.WifiPasswordBean
 import com.yjsoft.led.util.ShowCmdUtil
-import kotlinx.android.synthetic.main.activity_wifi.*
+import com.yjsoft.led.databinding.ActivityWifiBinding
+import com.yjsoft.led.databinding.LightSeekbarLayoutBinding
+import com.yjsoft.led.databinding.SetPasswordLayoutBinding
 import java.io.ByteArrayOutputStream
 import android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS
 import android.content.Context
 import android.view.Gravity
 import android.view.inputmethod.InputMethodManager
 import com.yjsoft.led.R
-import kotlinx.android.synthetic.main.light_seekbar_layout.view.*
-import kotlinx.android.synthetic.main.set_password_layout.view.*
 
 
 class WifiActivity : AppCompatActivity(), YJCallBack {
+    private lateinit var binding: ActivityWifiBinding
     private var wifiAdapter: WifiAdapter? = null
     private var typeList = arrayListOf<TypeBean>()
     private var oldPassword = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_wifi)
+        binding = ActivityWifiBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         setTitle(R.string.wifi)
 
@@ -84,12 +86,12 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
 
 
         wifiAdapter = WifiAdapter(this, typeList)
-        rc_type.layoutManager = LinearLayoutManager(this)
-        rc_type.adapter = wifiAdapter
+        binding.rcType.layoutManager = LinearLayoutManager(this)
+        binding.rcType.adapter = wifiAdapter
 
         wifiAdapter?.setOnButtonClickListener(object : WifiAdapter.OnButtonClickListener {
             override fun OnClickListener(position: Int) {
-                tv_result.text = ""
+                binding.tvResult.text = ""
                 when (typeList[position].position) {
                     6 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.text)
                     7 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.one_text)
@@ -197,33 +199,33 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
                     else ""
             }
             Log.e("------wtf: ",data+"_"+type)
-            tv_result.text = "수신 데이터:\n${data}\n전송 진행률:${progress}%"
+            binding.tvResult.text = "수신 데이터:\n${data}\n전송 진행률:${progress}%"
         }
     }
 
     override fun sendFail(code: Int) {
         runOnUiThread {
-            tv_result.text = "전송 실패: $code"
+            binding.tvResult.text = "전송 실패: $code"
         }
     }
 
     @SuppressLint("InflateParams")
     private fun showSetLightDialog(){
-        val view = LayoutInflater.from(this).inflate(R.layout.light_seekbar_layout,null)
-        val dialog = AlertDialog.Builder(this).setView(view).show()
-        view?.tv_cancel?.setOnClickListener { dialog.dismiss() }
-        view?.tv_confirm?.setOnClickListener {
+        val dialogBinding = LightSeekbarLayoutBinding.inflate(LayoutInflater.from(this))
+        val dialog = AlertDialog.Builder(this).setView(dialogBinding.root).show()
+        dialogBinding.tvCancel.setOnClickListener { dialog.dismiss() }
+        dialogBinding.tvConfirm.setOnClickListener {
             dialog.dismiss()
-            YJDeviceManager.instance.setLight(view.seekbar?.progress!! + 1)
+            YJDeviceManager.instance.setLight(dialogBinding.seekbar.progress + 1)
         }
     }
 
     @SuppressLint("InflateParams")
     private fun showSetPasswordDialog(){
-        val view = LayoutInflater.from(this).inflate(R.layout.set_password_layout,null)
-        val dialog = AlertDialog.Builder(this).setView(view).show()
-        view?.tv_led_cancel?.setOnClickListener { dialog.dismiss() }
-        view?.tv_led_confirm?.setOnClickListener {
+        val dialogBinding = SetPasswordLayoutBinding.inflate(LayoutInflater.from(this))
+        val dialog = AlertDialog.Builder(this).setView(dialogBinding.root).show()
+        dialogBinding.tvLedCancel.setOnClickListener { dialog.dismiss() }
+        dialogBinding.tvLedConfirm.setOnClickListener {
 //            dialog.dismiss()
 //            YJDeviceManager.instance.resetPassword(getWifiSsid(),"")
 
@@ -234,46 +236,46 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
                     HIDE_NOT_ALWAYS
                 )
 
-                if (view.et_old_password.text.toString().trim().isEmpty()){
+                if (dialogBinding.etOldPassword.text.toString().trim().isEmpty()){
                     ToastShow("이전 비밀번호를 입력하세요")
                     return@setOnClickListener
                 }
 
-                if (view.et_new_password.text.toString().trim().isEmpty()){
+                if (dialogBinding.etNewPassword.text.toString().trim().isEmpty()){
                     ToastShow("새 비밀번호를 입력하세요")
                     return@setOnClickListener
                 }
 
-                if (view.et_new_password_again.text.toString().trim().isEmpty()){
+                if (dialogBinding.etNewPasswordAgain.text.toString().trim().isEmpty()){
                     ToastShow("비밀번호 확인을 입력하세요")
                     return@setOnClickListener
                 }
 
-                if (!view.et_new_password.text.toString().equals(view.et_new_password_again.text.toString())){
+                if (!dialogBinding.etNewPassword.text.toString().equals(dialogBinding.etNewPasswordAgain.text.toString())){
                     ToastShow("새 비밀번호와 확인 비밀번호가 일치하지 않습니다")
                     return@setOnClickListener
                 }
 
-                if (!oldPassword.equals(view.et_old_password.text.toString().trim())){
+                if (!oldPassword.equals(dialogBinding.etOldPassword.text.toString().trim())){
                     ToastShow("이전 비밀번호가 틀렸습니다")
                     return@setOnClickListener
                 }
 
-                if (view.et_old_password.text.toString().trim().length < 8 ||
-                    view.et_new_password.text.toString().trim().length < 8 ||
-                    view.et_new_password_again.text.toString().trim().length < 8){
+                if (dialogBinding.etOldPassword.text.toString().trim().length < 8 ||
+                    dialogBinding.etNewPassword.text.toString().trim().length < 8 ||
+                    dialogBinding.etNewPasswordAgain.text.toString().trim().length < 8){
                     ToastShow("비밀번호는 최소 8자 이상입니다")
                     return@setOnClickListener
                 }
 
 
-                if (view.et_old_password.text.toString().trim().equals(view.et_new_password.text.toString().trim())){
+                if (dialogBinding.etOldPassword.text.toString().trim().equals(dialogBinding.etNewPassword.text.toString().trim())){
                     ToastShow("새 비밀번호가 이전 비밀번호와 같습니다")
                     return@setOnClickListener
                 }
 
                 dialog.dismiss()
-                YJDeviceManager.instance.resetPassword(getWifiSsid(),view.et_new_password_again.text.toString().trim())
+                YJDeviceManager.instance.resetPassword(getWifiSsid(),dialogBinding.etNewPasswordAgain.text.toString().trim())
         }
     }
 
@@ -299,7 +301,7 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
     }
 
     private fun ToastShow(text: String){
-        tv_result.text = text
+        binding.tvResult.text = text
         val toast = Toast.makeText(this,text,Toast.LENGTH_SHORT)
         toast.setGravity(Gravity.CENTER,0,0)
         toast.show()

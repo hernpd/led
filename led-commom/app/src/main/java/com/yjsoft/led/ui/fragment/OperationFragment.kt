@@ -7,23 +7,32 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.yjsoft.led.R
-import kotlinx.android.synthetic.main.fragment_operation.*
+import com.yjsoft.led.databinding.FragmentOperationBinding
 
 class OperationFragment : Fragment() {
+    private var _binding: FragmentOperationBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_operation, container, false)
+        _binding = FragmentOperationBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        btn_text1.setOnClickListener { showToast("text1") }
-        btn_text2.setOnClickListener { showToast("text2") }
-        btn_text3.setOnClickListener { showToast("text3") }
-        btn_text4.setOnClickListener { showToast("text4") }
-        btn_image1.setOnClickListener { showToast("image1") }
-        btn_image2.setOnClickListener { showToast("image2") }
-        btn_image3.setOnClickListener { showToast("image3") }
-        btn_image4.setOnClickListener { showToast("image4") }
+        binding.btnText1.setOnClickListener { showToast("text1") }
+        binding.btnText2.setOnClickListener { showToast("text2") }
+        binding.btnText3.setOnClickListener { showToast("text3") }
+        binding.btnText4.setOnClickListener { showToast("text4") }
+        binding.btnImage1.setOnClickListener { showToast("image1") }
+        binding.btnImage2.setOnClickListener { showToast("image2") }
+        binding.btnImage3.setOnClickListener { showToast("image3") }
+        binding.btnImage4.setOnClickListener { showToast("image4") }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun showToast(text: String) {
