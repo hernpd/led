@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_operation"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="@string/tab_operation" />
+    <item
+        android:id="@+id/navigation_status"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:title="@string/tab_status" />
+    <item
+        android:id="@+id/navigation_settings"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="@string/tab_settings" />
+</menu>
