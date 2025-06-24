@@ -3,5 +3,11 @@
     <string name="wifi">WIFI</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="bluetooth_list">Bluetooth Device List</string>
+    <string name="tab_operation">조작</string>
+    <string name="tab_status">상태</string>
+    <string name="tab_settings">설정</string>
+    <string name="status_connected">Connected</string>
+    <string name="status_disconnected">Disconnected</string>
+    <string name="status_unknown">Unknown</string>
     <style name="world_text">"{\"id_dev\":\"620312017C\",\"pkts_program\":{\"id_pro\":1,\"list_region\":[{\"info_pos\":{\"h\":64,\"w\":64,\"x\":0,\"y\":0},\"list_item\":[{\"align_horizontal\":\"left\",\"align_vertical\":\"top\",\"color\":255,\"data_save\":0,\"font\":\"/storage/emulated/0/Android/data/com.yj.led/cache/LED/.font/黑体.ttf\",\"info_animate\":{\"model_normal\":1,\"speed\":10,\"time_stay\":3},\"info_border\":{\"fixed_value\":0,\"type\":\"fixed\"},\"rotate\":0,\"size\":16,\"text\":\"测试文字\",\"type_item\":\"text_pic\"}]}],\"property_pro\":{\"gray\":4,\"height\":64,\"send_gif_src\":1,\"type_bg\":0,\"type_color\":3,\"type_pro\":0,\"width\":64}},\"sno\":\"4294901763\"}"</style>
 </resources>
