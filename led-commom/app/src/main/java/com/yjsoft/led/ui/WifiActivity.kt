@@ -1,0 +1,307 @@
+package com.yjsoft.led.ui
+
+import android.annotation.SuppressLint
+import android.graphics.BitmapFactory
+import android.net.wifi.WifiManager
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
+import com.yjsoft.core.YJDeviceManager
+import com.yjsoft.core.bean.YJBleDevice
+import com.yjsoft.core.controler.YJCallBack
+import com.yjsoft.core.utils.YJZipUtils
+import com.yjsoft.led.adapter.WifiAdapter
+import com.yjsoft.led.bean.TypeBean
+import com.yjsoft.led.bean.WifiPasswordBean
+import com.yjsoft.led.util.ShowCmdUtil
+import kotlinx.android.synthetic.main.activity_wifi.*
+import java.io.ByteArrayOutputStream
+import android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS
+import android.content.Context
+import android.view.Gravity
+import android.view.inputmethod.InputMethodManager
+import com.yjsoft.led.R
+import kotlinx.android.synthetic.main.light_seekbar_layout.view.*
+import kotlinx.android.synthetic.main.set_password_layout.view.*
+
+
+class WifiActivity : AppCompatActivity(), YJCallBack {
+    private var wifiAdapter: WifiAdapter? = null
+    private var typeList = arrayListOf<TypeBean>()
+    private var oldPassword = ""
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_wifi)
+
+        setTitle(R.string.wifi)
+
+        YJDeviceManager.instance.isWiFiDevice()
+
+        typeList.clear()
+        typeList.add(TypeBean(1,"获取设备信息"))
+        typeList.add(TypeBean(2,"获取设备屏幕信息"))
+        typeList.add(TypeBean(3,"获取设备亮度"))
+        typeList.add(TypeBean(4,"清屏"))
+        typeList.add(TypeBean(5,"获取wifi密码"))
+
+        typeList.add(TypeBean(6,"纯文字"))
+        typeList.add(TypeBean(7,"一字一色"))
+        typeList.add(TypeBean(8,"二字一色"))
+        typeList.add(TypeBean(9,"一行一色"))
+
+        typeList.add(TypeBean(10,"文字-背景图"))
+        typeList.add(TypeBean(11,"文字-背景GIF"))
+
+        typeList.add(TypeBean(12,"文字-前景图"))
+        typeList.add(TypeBean(13,"文字-前景GIF"))
+
+        typeList.add(TypeBean(14,"图片"))
+        typeList.add(TypeBean(15,"GIF"))
+
+
+        typeList.add(TypeBean(16,"组合-上文下图"))
+        typeList.add(TypeBean(17,"组合-上文下GIF"))
+        typeList.add(TypeBean(18,"组合-上文下图-炫彩字体"))
+        typeList.add(TypeBean(19,"组合-上文下GIF-炫彩字体"))
+
+        typeList.add(TypeBean(20,"组合-上图下文"))
+        typeList.add(TypeBean(21,"组合-上GIF下文"))
+        typeList.add(TypeBean(22,"组合-上图下文-炫彩字体"))
+        typeList.add(TypeBean(23,"组合-上GIF下文-炫彩字体"))
+
+
+        typeList.add(TypeBean(24,"组合-文字"))
+        typeList.add(TypeBean(25,"组合-多文字"))
+
+        typeList.add(TypeBean(26,"设置亮度"))
+        typeList.add(TypeBean(27,"删除指定节目"))
+        typeList.add(TypeBean(28,"设置密码"))
+
+
+        wifiAdapter = WifiAdapter(this, typeList)
+        rc_type.layoutManager = LinearLayoutManager(this)
+        rc_type.adapter = wifiAdapter
+
+        wifiAdapter?.setOnButtonClickListener(object : WifiAdapter.OnButtonClickListener {
+            override fun OnClickListener(position: Int) {
+                tv_result.text = ""
+                when (typeList[position].position) {
+                    6 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.text)
+                    7 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.one_text)
+                    8 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.two_text)
+                    9 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.line_text)
+                    10 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.background_with_text)
+                    11 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.background_gif_with_text)
+
+                    12 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.prospects_with_text)
+                    13 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.prospects_gif_with_text)
+                    14 -> {
+//                        YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.picture)
+
+                          val fileStream = assets.open("source/保持车距.jpg")
+                          val bitmap = BitmapFactory.decodeStream(fileStream)
+                          val json = YJZipUtils.zipPicture(bitmap)
+                          YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.picture(json))
+                    }
+                    15 -> {
+                        val gifByteArray = gifByteArray()
+                        val gif = YJZipUtils.zipGif(gifByteArray)
+                        YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.gif(gif))
+                    }
+
+
+                    16 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomPicture)
+                    17 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomGif)
+                    18 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomDazzleColor)
+                    19 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomGifDazzleColor)
+                    20 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTopPicture)
+                    21 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTopGif)
+                    22 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTopDazzleColor)
+                    23 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTopGIFDazzleColor)
+                    24 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationText)
+                    25 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTexts)
+
+                    26 -> showSetLightDialog()
+
+                    27 -> {
+                        val delList = arrayListOf<Int>()
+                        delList.add(1)
+                        YJDeviceManager.instance.deleteControl(delList)
+                    }
+
+                    28 -> {
+                        if (oldPassword.isEmpty())
+                            ToastShow("请先获取wifi密码")
+                        else showSetPasswordDialog()
+                    }
+
+                    else -> YJDeviceManager.instance.sendCommonCmd(typeList[position].position)
+                }
+            }
+        })
+
+        YJDeviceManager.instance.setCallBack(this)
+    }
+
+    private fun gifByteArray(): ByteArray{
+        val stream = assets.open("source/保持车距.gif")
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        var len: Int
+        val b = ByteArray(1024)
+        while (((stream.read(b)).also { len = it }) != -1) {
+            byteArrayOutputStream.write(b, 0, len)
+        }
+        byteArrayOutputStream.flush()
+        byteArrayOutputStream.close()
+
+        return byteArrayOutputStream.toByteArray()
+    }
+
+    override fun onScanning(yjBleDevice: YJBleDevice) {
+
+    }
+
+    override fun onScanStarted() {
+
+    }
+
+    override fun startConnect() {
+
+    }
+
+    override fun connectFail() {
+
+    }
+
+    override fun connectSuccess() {
+
+    }
+
+    override fun disConnected() {
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun resultData(data: String, progress: Int,type: Int) {
+        runOnUiThread {
+            if (type == 5){
+                val gson = Gson().fromJson<WifiPasswordBean>(data,WifiPasswordBean::class.java)
+                oldPassword =
+                    if (gson.ack.param_wifi.pwd.isNotEmpty())  gson.ack.param_wifi.pwd
+                    else if (gson.ack.param_wifi.pwd_coe.isNotEmpty()) gson.ack.param_wifi.pwd_coe
+                    else ""
+            }
+            Log.e("------wtf: ",data+"_"+type)
+            tv_result.text = "返回数据：\n${data}\n发送进度：${progress}%"
+        }
+    }
+
+    override fun sendFail(code: Int) {
+        runOnUiThread {
+            tv_result.text = "发送失败: $code"
+        }
+    }
+
+    @SuppressLint("InflateParams")
+    private fun showSetLightDialog(){
+        val view = LayoutInflater.from(this).inflate(R.layout.light_seekbar_layout,null)
+        val dialog = AlertDialog.Builder(this).setView(view).show()
+        view?.tv_cancel?.setOnClickListener { dialog.dismiss() }
+        view?.tv_confirm?.setOnClickListener {
+            dialog.dismiss()
+            YJDeviceManager.instance.setLight(view.seekbar?.progress!! + 1)
+        }
+    }
+
+    @SuppressLint("InflateParams")
+    private fun showSetPasswordDialog(){
+        val view = LayoutInflater.from(this).inflate(R.layout.set_password_layout,null)
+        val dialog = AlertDialog.Builder(this).setView(view).show()
+        view?.tv_led_cancel?.setOnClickListener { dialog.dismiss() }
+        view?.tv_led_confirm?.setOnClickListener {
+//            dialog.dismiss()
+//            YJDeviceManager.instance.resetPassword(getWifiSsid(),"")
+
+                val manager =
+                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                manager.hideSoftInputFromWindow(
+                    dialog.currentFocus!!.windowToken,
+                    HIDE_NOT_ALWAYS
+                )
+
+                if (view.et_old_password.text.toString().trim().isEmpty()){
+                    ToastShow("请输入旧密码")
+                    return@setOnClickListener
+                }
+
+                if (view.et_new_password.text.toString().trim().isEmpty()){
+                    ToastShow("请输入新密码")
+                    return@setOnClickListener
+                }
+
+                if (view.et_new_password_again.text.toString().trim().isEmpty()){
+                    ToastShow("请输入确认密码")
+                    return@setOnClickListener
+                }
+
+                if (!view.et_new_password.text.toString().equals(view.et_new_password_again.text.toString())){
+                    ToastShow("输入新密码和确认密码不一致")
+                    return@setOnClickListener
+                }
+
+                if (!oldPassword.equals(view.et_old_password.text.toString().trim())){
+                    ToastShow("旧密码错误")
+                    return@setOnClickListener
+                }
+
+                if (view.et_old_password.text.toString().trim().length < 8 ||
+                    view.et_new_password.text.toString().trim().length < 8 ||
+                    view.et_new_password_again.text.toString().trim().length < 8){
+                    ToastShow("密码长度最少8位")
+                    return@setOnClickListener
+                }
+
+
+                if (view.et_old_password.text.toString().trim().equals(view.et_new_password.text.toString().trim())){
+                    ToastShow("新密码和旧密码一致")
+                    return@setOnClickListener
+                }
+
+                dialog.dismiss()
+                YJDeviceManager.instance.resetPassword(getWifiSsid(),view.et_new_password_again.text.toString().trim())
+        }
+    }
+
+
+    @SuppressLint("MissingPermission")
+    public fun getWifiSsid(): String{
+        val wifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
+        val wifiInfo = wifiManager.connectionInfo
+        var ssid = wifiInfo.ssid
+        val networkId = wifiInfo.networkId
+        val configuredNetwork = wifiManager.configuredNetworks
+        if (configuredNetwork != null) {
+            for (i in configuredNetwork) {
+                if (i.networkId == networkId) {
+                    ssid = i.SSID
+                    break
+                }
+            }
+        }
+        return if (ssid.startsWith("\"") && ssid.endsWith("\""))
+            ssid.substring(1,ssid.length - 1)
+        else ssid
+    }
+
+    private fun ToastShow(text: String){
+        tv_result.text = text
+        val toast = Toast.makeText(this,text,Toast.LENGTH_SHORT)
+        toast.setGravity(Gravity.CENTER,0,0)
+        toast.show()
+    }
+}

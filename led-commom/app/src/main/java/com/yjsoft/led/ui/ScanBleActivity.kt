@@ -1,0 +1,214 @@
+package com.yjsoft.led.ui
+
+import android.Manifest
+import android.app.Dialog
+import android.app.ProgressDialog
+import android.bluetooth.BluetoothAdapter
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.yjsoft.core.YJDeviceManager
+import com.yjsoft.core.bean.YJBleDevice
+import com.yjsoft.core.controler.YJCallBack
+import com.yjsoft.led.R
+import com.yjsoft.led.adapter.BleDeviceListAdapter
+import kotlinx.android.synthetic.main.activity_scan_ble.*
+
+class ScanBleActivity : AppCompatActivity(), YJCallBack {
+    private val deviceList = arrayListOf<YJBleDevice>()
+    private var deviceListAdapter: BleDeviceListAdapter? = null
+    private var clickPosition = -1
+    private var progressDialog: ProgressDialog? = null
+    private var isScan = false
+    companion object{
+        var yjBleDevice: YJBleDevice? = null
+    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_scan_ble)
+
+        setTitle(R.string.bluetooth_list)
+
+
+        deviceListAdapter = BleDeviceListAdapter(this,deviceList)
+        rc_bluetooth_list.layoutManager = LinearLayoutManager(this)
+        rc_bluetooth_list.adapter = deviceListAdapter
+
+
+        deviceListAdapter?.setOnItemClickListener(object : BleDeviceListAdapter.OnItemClickListener{
+            override fun OnClickListener(position: Int) {
+                if (!YJDeviceManager.instance.isConnect(deviceList[position])) {
+                    showProgressDialog("正在连接...")
+                    clickPosition = position
+                    YJDeviceManager.instance.connect(deviceList[position])
+                }else finish()
+            }
+        })
+
+        YJDeviceManager.instance.setCallBack(this)
+
+        checkPermission()
+
+        button_scan.setOnClickListener {
+            isScan = !isScan
+            if (isScan){
+                button_scan.text = "暂停扫描"
+                checkPermission()
+            }else{
+                button_scan.text = "开始扫描"
+                YJDeviceManager.instance.stopScan()
+            }
+        }
+    }
+
+    private fun checkPermission() {
+        val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+        val permissionDeniedList = ArrayList<String>()
+        for (permission in permissions) {
+            val permissionCheck = ContextCompat.checkSelfPermission(this, permission)
+            if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+//                onPermissionGranted(permission)
+                YJDeviceManager.instance.scan()
+            } else {
+                permissionDeniedList.add(permission)
+            }
+        }
+        if (permissionDeniedList.isNotEmpty()) {
+            val deniedPermissions = permissionDeniedList.toTypedArray()
+            ActivityCompat.requestPermissions(
+                this,
+                deniedPermissions,
+                0x601
+            )
+        }
+    }
+
+    private var dialog: Dialog? = null
+    private fun onPermissionGranted(permission: String) {
+        when (permission) {
+            Manifest.permission.ACCESS_FINE_LOCATION -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    dialog?.dismiss()
+                    dialog = AlertDialog.Builder(this)
+                        /*.setTitle(getString(R.string.tip))
+                        .setMessage(getString(R.string.please_open_gps))
+                        .setNegativeButton(
+                            getString(R.string.cancel)
+                        ) { dialog, which ->
+                            dialog?.dismiss()
+                            finish()
+                        }
+                        .setPositiveButton(
+                            getString(R.string.go_set)
+                        ) { dialog, which ->
+                            val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                            startActivityForResult(intent, REQUEST_CODE_OPEN_GPS)
+                        }*/
+                        .setCancelable(false)
+                        .show()
+                }
+            }
+        }
+    }
+
+    override fun onScanning(yjBleDevice: YJBleDevice) {
+        runOnUiThread {
+            if (!checkDevice(yjBleDevice.mac)) {
+                deviceList.add(yjBleDevice)
+                deviceListAdapter?.notifyDataSetChanged()
+            }
+        }
+    }
+
+    private fun checkDevice(mac: String): Boolean{
+        var isExit = false
+        for (i in deviceList){
+            if (i.mac.equals(mac)){
+                isExit = true
+                break
+            }
+        }
+        return isExit
+    }
+
+    override fun onScanStarted() {
+        runOnUiThread {
+            deviceList.clear()
+            if (yjBleDevice != null){
+                deviceList.add(yjBleDevice!!)
+                deviceListAdapter?.setMac(yjBleDevice!!.mac)
+                deviceListAdapter?.notifyDataSetChanged()
+            }
+
+            button_scan.text = "停止扫描"
+            isScan = true
+        }
+    }
+
+    override fun startConnect() {
+
+    }
+
+    override fun connectFail() {
+        runOnUiThread {
+            hideProgressDialog()
+            Toast.makeText(this, "连接失败", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun connectSuccess() {
+        runOnUiThread {
+            hideProgressDialog()
+            if (clickPosition > -1)
+                yjBleDevice = deviceList[clickPosition]
+
+            Toast.makeText(this, "连接成功", Toast.LENGTH_SHORT).show()
+            finish()
+        }
+    }
+
+    override fun disConnected() {
+        runOnUiThread {
+            yjBleDevice = null
+            deviceListAdapter?.setMac("")
+            deviceListAdapter?.notifyDataSetChanged()
+        }
+    }
+
+    override fun resultData(data: String, progress: Int,type: Int) {
+
+    }
+
+    override fun sendFail(code: Int) {
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        YJDeviceManager.instance.stopScan()
+    }
+
+    private fun showProgressDialog(message: String){
+        if (progressDialog == null) {
+            progressDialog = ProgressDialog.show(this, title,
+                message, true, true);
+//            progressDialog.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progressbar));
+        } else if (progressDialog?.isShowing!!) {
+            progressDialog?.setTitle(title)
+            progressDialog?.setMessage(message)
+        }
+        progressDialog?.show()
+    }
+
+    private fun hideProgressDialog() {
+        if (progressDialog != null && progressDialog?.isShowing!!) {
+            progressDialog?.dismiss()
+        }
+    }
+}
