@@ -44,7 +44,7 @@ class ScanBleActivity : AppCompatActivity(), YJCallBack {
         deviceListAdapter?.setOnItemClickListener(object : BleDeviceListAdapter.OnItemClickListener{
             override fun OnClickListener(position: Int) {
                 if (!YJDeviceManager.instance.isConnect(deviceList[position])) {
-                    showProgressDialog("正在连接...")
+                    showProgressDialog("연결 중...")
                     clickPosition = position
                     YJDeviceManager.instance.connect(deviceList[position])
                 }else finish()
@@ -58,10 +58,10 @@ class ScanBleActivity : AppCompatActivity(), YJCallBack {
         button_scan.setOnClickListener {
             isScan = !isScan
             if (isScan){
-                button_scan.text = "暂停扫描"
+                button_scan.text = "스캔 일시중지"
                 checkPermission()
             }else{
-                button_scan.text = "开始扫描"
+                button_scan.text = "스캔 시작"
                 YJDeviceManager.instance.stopScan()
             }
         }
@@ -146,7 +146,7 @@ class ScanBleActivity : AppCompatActivity(), YJCallBack {
                 deviceListAdapter?.notifyDataSetChanged()
             }
 
-            button_scan.text = "停止扫描"
+            button_scan.text = "스캔 중지"
             isScan = true
         }
     }
@@ -158,7 +158,7 @@ class ScanBleActivity : AppCompatActivity(), YJCallBack {
     override fun connectFail() {
         runOnUiThread {
             hideProgressDialog()
-            Toast.makeText(this, "连接失败", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "연결 실패", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -168,7 +168,7 @@ class ScanBleActivity : AppCompatActivity(), YJCallBack {
             if (clickPosition > -1)
                 yjBleDevice = deviceList[clickPosition]
 
-            Toast.makeText(this, "连接成功", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "연결 성공", Toast.LENGTH_SHORT).show()
             finish()
         }
     }

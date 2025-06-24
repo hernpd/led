@@ -33,44 +33,44 @@ class BleActivity : AppCompatActivity(), YJCallBack {
 
         setTitle(R.string.bluetooth)
 
-        typeList.add("蓝牙列表")
-        typeList.add("获取设备信息")
-        typeList.add("获取设备屏幕信息")
-        typeList.add("获取设备亮度")
-        typeList.add("清屏")
+        typeList.add("블루투스 목록")
+        typeList.add("장치 정보 가져오기")
+        typeList.add("장치 화면 정보 가져오기")
+        typeList.add("장치 밝기 가져오기")
+        typeList.add("화면 지우기")
 
-        typeList.add("纯文字")
-        typeList.add("一字一色")
-        typeList.add("二字一色")
-        typeList.add("一行一色")
+        typeList.add("텍스트")
+        typeList.add("한 글자 한 색")
+        typeList.add("두 글자 한 색")
+        typeList.add("한 줄 한 색")
 
-        typeList.add("文字-背景图")
-        typeList.add("文字-背景GIF")
+        typeList.add("텍스트-배경 이미지")
+        typeList.add("텍스트-배경 GIF")
 
-        typeList.add("文字-前景图")
-        typeList.add("文字-前景GIF")
+        typeList.add("텍스트-전경 이미지")
+        typeList.add("텍스트-전경 GIF")
 
-        typeList.add("图片")
+        typeList.add("이미지")
         typeList.add("GIF")
 
 
-        typeList.add("组合-上文下图")
-        typeList.add("组合-上文下GIF")
-        typeList.add("组合-上文下图-炫彩字体")
-        typeList.add("组合-上文下GIF-炫彩字体")
+        typeList.add("조합-위 텍스트 아래 이미지")
+        typeList.add("조합-위 텍스트 아래 GIF")
+        typeList.add("조합-위 텍스트 아래 이미지-화려한 글꼴")
+        typeList.add("조합-위 텍스트 아래 GIF-화려한 글꼴")
 
-        typeList.add("组合-上图下文")
-        typeList.add("组合-上GIF下文")
-        typeList.add("组合-上图下文-炫彩字体")
-        typeList.add("组合-上GIF下文-炫彩字体")
+        typeList.add("조합-위 이미지 아래 텍스트")
+        typeList.add("조합-위 GIF 아래 텍스트")
+        typeList.add("조합-위 이미지 아래 텍스트-화려한 글꼴")
+        typeList.add("조합-위 GIF 아래 텍스트-화려한 글꼴")
 
 
-        typeList.add("组合-文字")
-        typeList.add("组合-多文字")
+        typeList.add("조합-텍스트")
+        typeList.add("조합-다중 텍스트")
 
-        typeList.add("设置亮度")
-        typeList.add("删除指定节目")
-        typeList.add("断开连接")
+        typeList.add("밝기 설정")
+        typeList.add("지정 프로그램 삭제")
+        typeList.add("연결 해제")
 
         bleAdapter = BleAdapter(this,typeList)
         rc_ble.layoutManager = LinearLayoutManager(this)
@@ -82,7 +82,7 @@ class BleActivity : AppCompatActivity(), YJCallBack {
                 when(position){
                     0 -> {
                         if (!BluetoothAdapter.getDefaultAdapter().isEnabled) {
-                            Toast.makeText(this@BleActivity,"请打开蓝牙",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@BleActivity,"블루투스를 켜주세요",Toast.LENGTH_SHORT).show()
                             BluetoothAdapter.getDefaultAdapter().enable()
                         }else startActivity(Intent(this@BleActivity,ScanBleActivity::class.java))
                     }
@@ -177,7 +177,7 @@ class BleActivity : AppCompatActivity(), YJCallBack {
     override fun disConnected() {
         runOnUiThread {
             ScanBleActivity.yjBleDevice = null
-            tv_result.text = "设备断开连接"
+            tv_result.text = "장치 연결 해제"
         }
     }
 
@@ -185,13 +185,13 @@ class BleActivity : AppCompatActivity(), YJCallBack {
     override fun resultData(data: String, progress: Int,type: Int) {
         Log.e("--线程：",Thread.currentThread().name)
         runOnUiThread {
-            tv_result.text = "返回数据：\n${data}\n发送进度：${progress}%"
+            tv_result.text = "수신 데이터:\n${data}\n전송 진행률:${progress}%"
         }
     }
 
     override fun sendFail(code: Int) {
         runOnUiThread {
-            tv_result.text = "发送失败: $code"
+            tv_result.text = "전송 실패: $code"
         }
     }
 
