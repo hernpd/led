@@ -43,44 +43,44 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
         YJDeviceManager.instance.isWiFiDevice()
 
         typeList.clear()
-        typeList.add(TypeBean(1,"获取设备信息"))
-        typeList.add(TypeBean(2,"获取设备屏幕信息"))
-        typeList.add(TypeBean(3,"获取设备亮度"))
-        typeList.add(TypeBean(4,"清屏"))
-        typeList.add(TypeBean(5,"获取wifi密码"))
+        typeList.add(TypeBean(1,"장치 정보 가져오기"))
+        typeList.add(TypeBean(2,"장치 화면 정보 가져오기"))
+        typeList.add(TypeBean(3,"장치 밝기 가져오기"))
+        typeList.add(TypeBean(4,"화면 지우기"))
+        typeList.add(TypeBean(5,"WiFi 비밀번호 가져오기"))
 
-        typeList.add(TypeBean(6,"纯文字"))
-        typeList.add(TypeBean(7,"一字一色"))
-        typeList.add(TypeBean(8,"二字一色"))
-        typeList.add(TypeBean(9,"一行一色"))
+        typeList.add(TypeBean(6,"텍스트"))
+        typeList.add(TypeBean(7,"한 글자 한 색"))
+        typeList.add(TypeBean(8,"두 글자 한 색"))
+        typeList.add(TypeBean(9,"한 줄 한 색"))
 
-        typeList.add(TypeBean(10,"文字-背景图"))
-        typeList.add(TypeBean(11,"文字-背景GIF"))
+        typeList.add(TypeBean(10,"텍스트-배경 이미지"))
+        typeList.add(TypeBean(11,"텍스트-배경 GIF"))
 
-        typeList.add(TypeBean(12,"文字-前景图"))
-        typeList.add(TypeBean(13,"文字-前景GIF"))
+        typeList.add(TypeBean(12,"텍스트-전경 이미지"))
+        typeList.add(TypeBean(13,"텍스트-전경 GIF"))
 
-        typeList.add(TypeBean(14,"图片"))
+        typeList.add(TypeBean(14,"이미지"))
         typeList.add(TypeBean(15,"GIF"))
 
 
-        typeList.add(TypeBean(16,"组合-上文下图"))
-        typeList.add(TypeBean(17,"组合-上文下GIF"))
-        typeList.add(TypeBean(18,"组合-上文下图-炫彩字体"))
-        typeList.add(TypeBean(19,"组合-上文下GIF-炫彩字体"))
+        typeList.add(TypeBean(16,"조합-위 텍스트 아래 이미지"))
+        typeList.add(TypeBean(17,"조합-위 텍스트 아래 GIF"))
+        typeList.add(TypeBean(18,"조합-위 텍스트 아래 이미지-화려한 글꼴"))
+        typeList.add(TypeBean(19,"조합-위 텍스트 아래 GIF-화려한 글꼴"))
 
-        typeList.add(TypeBean(20,"组合-上图下文"))
-        typeList.add(TypeBean(21,"组合-上GIF下文"))
-        typeList.add(TypeBean(22,"组合-上图下文-炫彩字体"))
-        typeList.add(TypeBean(23,"组合-上GIF下文-炫彩字体"))
+        typeList.add(TypeBean(20,"조합-위 이미지 아래 텍스트"))
+        typeList.add(TypeBean(21,"조합-위 GIF 아래 텍스트"))
+        typeList.add(TypeBean(22,"조합-위 이미지 아래 텍스트-화려한 글꼴"))
+        typeList.add(TypeBean(23,"조합-위 GIF 아래 텍스트-화려한 글꼴"))
 
 
-        typeList.add(TypeBean(24,"组合-文字"))
-        typeList.add(TypeBean(25,"组合-多文字"))
+        typeList.add(TypeBean(24,"조합-텍스트"))
+        typeList.add(TypeBean(25,"조합-다중 텍스트"))
 
-        typeList.add(TypeBean(26,"设置亮度"))
-        typeList.add(TypeBean(27,"删除指定节目"))
-        typeList.add(TypeBean(28,"设置密码"))
+        typeList.add(TypeBean(26,"밝기 설정"))
+        typeList.add(TypeBean(27,"지정 프로그램 삭제"))
+        typeList.add(TypeBean(28,"비밀번호 설정"))
 
 
         wifiAdapter = WifiAdapter(this, typeList)
@@ -136,7 +136,7 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
 
                     28 -> {
                         if (oldPassword.isEmpty())
-                            ToastShow("请先获取wifi密码")
+                            ToastShow("먼저 WiFi 비밀번호를 가져오세요")
                         else showSetPasswordDialog()
                     }
 
@@ -197,13 +197,13 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
                     else ""
             }
             Log.e("------wtf: ",data+"_"+type)
-            tv_result.text = "返回数据：\n${data}\n发送进度：${progress}%"
+            tv_result.text = "수신 데이터:\n${data}\n전송 진행률:${progress}%"
         }
     }
 
     override fun sendFail(code: Int) {
         runOnUiThread {
-            tv_result.text = "发送失败: $code"
+            tv_result.text = "전송 실패: $code"
         }
     }
 
@@ -235,40 +235,40 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
                 )
 
                 if (view.et_old_password.text.toString().trim().isEmpty()){
-                    ToastShow("请输入旧密码")
+                    ToastShow("이전 비밀번호를 입력하세요")
                     return@setOnClickListener
                 }
 
                 if (view.et_new_password.text.toString().trim().isEmpty()){
-                    ToastShow("请输入新密码")
+                    ToastShow("새 비밀번호를 입력하세요")
                     return@setOnClickListener
                 }
 
                 if (view.et_new_password_again.text.toString().trim().isEmpty()){
-                    ToastShow("请输入确认密码")
+                    ToastShow("비밀번호 확인을 입력하세요")
                     return@setOnClickListener
                 }
 
                 if (!view.et_new_password.text.toString().equals(view.et_new_password_again.text.toString())){
-                    ToastShow("输入新密码和确认密码不一致")
+                    ToastShow("새 비밀번호와 확인 비밀번호가 일치하지 않습니다")
                     return@setOnClickListener
                 }
 
                 if (!oldPassword.equals(view.et_old_password.text.toString().trim())){
-                    ToastShow("旧密码错误")
+                    ToastShow("이전 비밀번호가 틀렸습니다")
                     return@setOnClickListener
                 }
 
                 if (view.et_old_password.text.toString().trim().length < 8 ||
                     view.et_new_password.text.toString().trim().length < 8 ||
                     view.et_new_password_again.text.toString().trim().length < 8){
-                    ToastShow("密码长度最少8位")
+                    ToastShow("비밀번호는 최소 8자 이상입니다")
                     return@setOnClickListener
                 }
 
 
                 if (view.et_old_password.text.toString().trim().equals(view.et_new_password.text.toString().trim())){
-                    ToastShow("新密码和旧密码一致")
+                    ToastShow("새 비밀번호가 이전 비밀번호와 같습니다")
                     return@setOnClickListener
                 }
 
