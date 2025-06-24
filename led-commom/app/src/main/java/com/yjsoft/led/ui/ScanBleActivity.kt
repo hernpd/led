@@ -18,9 +18,10 @@ import com.yjsoft.core.bean.YJBleDevice
 import com.yjsoft.core.controler.YJCallBack
 import com.yjsoft.led.R
 import com.yjsoft.led.adapter.BleDeviceListAdapter
-import kotlinx.android.synthetic.main.activity_scan_ble.*
+import com.yjsoft.led.databinding.ActivityScanBleBinding
 
 class ScanBleActivity : AppCompatActivity(), YJCallBack {
+    private lateinit var binding: ActivityScanBleBinding
     private val deviceList = arrayListOf<YJBleDevice>()
     private var deviceListAdapter: BleDeviceListAdapter? = null
     private var clickPosition = -1
@@ -31,14 +32,15 @@ class ScanBleActivity : AppCompatActivity(), YJCallBack {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_scan_ble)
+        binding = ActivityScanBleBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         setTitle(R.string.bluetooth_list)
 
 
         deviceListAdapter = BleDeviceListAdapter(this,deviceList)
-        rc_bluetooth_list.layoutManager = LinearLayoutManager(this)
-        rc_bluetooth_list.adapter = deviceListAdapter
+        binding.rcBluetoothList.layoutManager = LinearLayoutManager(this)
+        binding.rcBluetoothList.adapter = deviceListAdapter
 
 
         deviceListAdapter?.setOnItemClickListener(object : BleDeviceListAdapter.OnItemClickListener{
@@ -55,13 +57,13 @@ class ScanBleActivity : AppCompatActivity(), YJCallBack {
 
         checkPermission()
 
-        button_scan.setOnClickListener {
+        binding.buttonScan.setOnClickListener {
             isScan = !isScan
             if (isScan){
-                button_scan.text = "스캔 일시중지"
+                binding.buttonScan.text = "스캔 일시중지"
                 checkPermission()
             }else{
-                button_scan.text = "스캔 시작"
+                binding.buttonScan.text = "스캔 시작"
                 YJDeviceManager.instance.stopScan()
             }
         }
@@ -146,7 +148,7 @@ class ScanBleActivity : AppCompatActivity(), YJCallBack {
                 deviceListAdapter?.notifyDataSetChanged()
             }
 
-            button_scan.text = "스캔 중지"
+            binding.buttonScan.text = "스캔 중지"
             isScan = true
         }
     }

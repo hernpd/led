@@ -9,11 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.yjsoft.led.R
-import kotlinx.android.synthetic.main.fragment_status.*
+import com.yjsoft.led.databinding.FragmentStatusBinding
 
 class StatusFragment : Fragment() {
+    private var _binding: FragmentStatusBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_status, container, false)
+        _binding = FragmentStatusBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -22,9 +26,9 @@ class StatusFragment : Fragment() {
     }
 
     private fun updateStatus() {
-        tv_wifi_status.text = getConnectionStatus(NetworkCapabilities.TRANSPORT_WIFI)
-        tv_bluetooth_status.text = getString(R.string.status_unknown)
-        tv_led_status.text = getString(R.string.status_unknown)
+        binding.tvWifiStatus.text = getConnectionStatus(NetworkCapabilities.TRANSPORT_WIFI)
+        binding.tvBluetoothStatus.text = getString(R.string.status_unknown)
+        binding.tvLedStatus.text = getString(R.string.status_unknown)
     }
 
     private fun getConnectionStatus(transport: Int): String {
@@ -36,5 +40,9 @@ class StatusFragment : Fragment() {
         } else {
             getString(R.string.status_disconnected)
         }
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

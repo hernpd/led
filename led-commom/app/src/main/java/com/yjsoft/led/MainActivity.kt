@@ -10,18 +10,21 @@ import com.yjsoft.led.ui.fragment.OperationFragment
 import com.yjsoft.led.ui.fragment.SettingsFragment
 import com.yjsoft.led.ui.fragment.StatusFragment
 import com.yjsoft.led.util.FileUtils
-import kotlinx.android.synthetic.main.activity_main.*
+import com.yjsoft.led.databinding.ActivityMainBinding
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         initFontDir()
         YJDeviceManager.instance.init(this.application)
 
-        bottom_navigation.setOnNavigationItemSelectedListener { item ->
+        binding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_operation -> switchFragment(OperationFragment())
                 R.id.navigation_status -> switchFragment(StatusFragment())
@@ -30,7 +33,7 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        bottom_navigation.selectedItemId = R.id.navigation_operation
+        binding.bottomNavigation.selectedItemId = R.id.navigation_operation
     }
 
     private fun switchFragment(fragment: Fragment) {
