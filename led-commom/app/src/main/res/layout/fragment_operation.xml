@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/previewImage"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/darker_gray" />
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="4"
+        android:padding="8dp">
+        <Button android:id="@+id/btn_text1" android:text="text1" />
+        <Button android:id="@+id/btn_text2" android:text="text2" />
+        <Button android:id="@+id/btn_text3" android:text="text3" />
+        <Button android:id="@+id/btn_text4" android:text="text4" />
+        <Button android:id="@+id/btn_image1" android:text="image1" />
+        <Button android:id="@+id/btn_image2" android:text="image2" />
+        <Button android:id="@+id/btn_image3" android:text="image3" />
+        <Button android:id="@+id/btn_image4" android:text="image4" />
+    </GridLayout>
+</LinearLayout>
