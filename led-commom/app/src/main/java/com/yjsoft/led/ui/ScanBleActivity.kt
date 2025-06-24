@@ -70,18 +70,23 @@ class ScanBleActivity : AppCompatActivity(), YJCallBack {
     }
 
     private fun checkPermission() {
-        val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+        val permissions = mutableListOf(Manifest.permission.ACCESS_FINE_LOCATION)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            permissions.add(Manifest.permission.BLUETOOTH_SCAN)
+            permissions.add(Manifest.permission.BLUETOOTH_CONNECT)
+        }
+
         val permissionDeniedList = ArrayList<String>()
         for (permission in permissions) {
             val permissionCheck = ContextCompat.checkSelfPermission(this, permission)
-            if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-//                onPermissionGranted(permission)
-                YJDeviceManager.instance.scan()
-            } else {
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                 permissionDeniedList.add(permission)
             }
         }
-        if (permissionDeniedList.isNotEmpty()) {
+
+        if (permissionDeniedList.isEmpty()) {
+            YJDeviceManager.instance.scan()
+        } else {
             val deniedPermissions = permissionDeniedList.toTypedArray()
             ActivityCompat.requestPermissions(
                 this,
