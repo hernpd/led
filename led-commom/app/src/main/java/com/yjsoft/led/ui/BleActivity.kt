@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.yjsoft.led.databinding.ProgressDialogLayoutBinding
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.yjsoft.core.YJDeviceManager
 import com.yjsoft.core.bean.YJBleDevice
@@ -28,6 +29,9 @@ class BleActivity : AppCompatActivity(), YJCallBack {
     private lateinit var binding: ActivityBleBinding
     private var bleAdapter: BleAdapter? = null
     private val typeList = arrayListOf<String>()
+    private var progressDialog: AlertDialog? = null
+    private var progressBinding: ProgressDialogLayoutBinding? = null
+    private var currentSendDesc = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBleBinding.inflate(layoutInflater)
@@ -89,48 +93,52 @@ class BleActivity : AppCompatActivity(), YJCallBack {
                         }else startActivity(Intent(this@BleActivity,ScanBleActivity::class.java))
                     }
 
-                    5 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.text)
-                    6 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.one_text)
-                    7 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.two_text)
-                    8 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.line_text)
-                    9 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.background_with_text)
-                    10 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.background_gif_with_text)
+                    5 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.text) }
+                    6 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.one_text) }
+                    7 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.two_text) }
+                    8 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.line_text) }
+                    9 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.background_with_text) }
+                    10 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.background_gif_with_text) }
 
-                    11 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.prospects_with_text)
-                    12 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.prospects_gif_with_text)
+                    11 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.prospects_with_text) }
+                    12 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.prospects_gif_with_text) }
                     13 -> {
+                        showProgress(typeList[position])
                         val fileStream = assets.open("source/保持车距.jpg")
                         val bitmap = BitmapFactory.decodeStream(fileStream)
                         val json = YJZipUtils.zipPicture(bitmap)
                         YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.picture(json))
                     }
                     14 -> {
+                        showProgress(typeList[position])
                         val gifByteArray = gifByteArray()
                         val gif = YJZipUtils.zipGif(gifByteArray)
                         YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.gif(gif))
                     }
 
-                    15 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomPicture)
-                    16 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomGif)
-                    17 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomDazzleColor)
-                    18 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomGifDazzleColor)
-                    19 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTopPicture)
-                    20 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTopGif)
-                    21 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTopDazzleColor)
-                    22 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTopGIFDazzleColor)
-                    23 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationText)
-                    24 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTexts)
+                    15 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomPicture) }
+                    16 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomGif) }
+                    17 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomDazzleColor) }
+                    18 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomGifDazzleColor) }
+                    19 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTopPicture) }
+                    20 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTopGif) }
+                    21 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTopDazzleColor) }
+                    22 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTopGIFDazzleColor) }
+                    23 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationText) }
+                    24 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTexts) }
 
                     25 -> showSetLightDialog()
                     26 -> {
+                        showProgress(typeList[position])
                         val delList = arrayListOf<Int>()
                         delList.add(1)
                         YJDeviceManager.instance.deleteControl(delList)
                     }
                     27 ->{
+                        showProgress(typeList[position])
                         YJDeviceManager.instance.disconnect()
                     }
-                    else -> YJDeviceManager.instance.sendCommonCmd(position)
+                    else -> { showProgress(typeList[position]); YJDeviceManager.instance.sendCommonCmd(position) }
                 }
             }
         })
@@ -188,12 +196,39 @@ class BleActivity : AppCompatActivity(), YJCallBack {
         Log.e("--线程：",Thread.currentThread().name)
         runOnUiThread {
             binding.tvResult.text = "수신 데이터:\n${data}\n전송 진행률:${progress}%"
+            updateProgress(progress)
         }
     }
 
     override fun sendFail(code: Int) {
         runOnUiThread {
             binding.tvResult.text = "전송 실패: $code"
+            progressBinding?.tvStatus?.text = "${currentSendDesc} 전송 실패: $code"
+            progressDialog?.dismiss()
+        }
+    }
+
+    private fun showProgress(desc: String) {
+        if (progressBinding == null) {
+            progressBinding = ProgressDialogLayoutBinding.inflate(layoutInflater)
+            progressDialog = AlertDialog.Builder(this)
+                .setView(progressBinding!!.root)
+                .setCancelable(false)
+                .create()
+        }
+        currentSendDesc = desc
+        progressBinding?.tvStatus?.text = "${desc} 전송 중"
+        progressBinding?.progressBar?.progress = 0
+        progressDialog?.show()
+    }
+
+    private fun updateProgress(progress: Int) {
+        progressBinding?.progressBar?.progress = progress
+        if (progress >= 100) {
+            progressBinding?.tvStatus?.text = "${currentSendDesc} 전송 완료"
+            progressDialog?.dismiss()
+        } else {
+            progressBinding?.tvStatus?.text = "${currentSendDesc} 전송 중...${progress}%"
         }
     }
 
@@ -204,6 +239,7 @@ class BleActivity : AppCompatActivity(), YJCallBack {
         dialogBinding.tvCancel.setOnClickListener { dialog.dismiss() }
         dialogBinding.tvConfirm.setOnClickListener {
             dialog.dismiss()
+            showProgress("밝기 설정")
             YJDeviceManager.instance.setLight(dialogBinding.seekbar.progress + 1)
         }
     }
