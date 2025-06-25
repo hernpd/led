@@ -22,6 +22,7 @@ import com.yjsoft.led.util.ShowCmdUtil
 import com.yjsoft.led.databinding.ActivityWifiBinding
 import com.yjsoft.led.databinding.LightSeekbarLayoutBinding
 import com.yjsoft.led.databinding.SetPasswordLayoutBinding
+import com.yjsoft.led.databinding.ProgressDialogLayoutBinding
 import java.io.ByteArrayOutputStream
 import android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS
 import android.content.Context
@@ -35,6 +36,9 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
     private var wifiAdapter: WifiAdapter? = null
     private var typeList = arrayListOf<TypeBean>()
     private var oldPassword = ""
+    private var progressDialog: AlertDialog? = null
+    private var progressBinding: ProgressDialogLayoutBinding? = null
+    private var currentSendDesc = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWifiBinding.inflate(layoutInflater)
@@ -93,15 +97,15 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
             override fun OnClickListener(position: Int) {
                 binding.tvResult.text = ""
                 when (typeList[position].position) {
-                    6 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.text)
-                    7 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.one_text)
-                    8 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.two_text)
-                    9 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.line_text)
-                    10 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.background_with_text)
-                    11 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.background_gif_with_text)
+                    6 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.text) }
+                    7 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.one_text) }
+                    8 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.two_text) }
+                    9 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.line_text) }
+                    10 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.background_with_text) }
+                    11 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.background_gif_with_text) }
 
-                    12 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.prospects_with_text)
-                    13 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.prospects_gif_with_text)
+                    12 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.prospects_with_text) }
+                    13 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.prospects_gif_with_text) }
                     14 -> {
 //                        YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.picture)
 
@@ -117,20 +121,20 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
                     }
 
 
-                    16 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomPicture)
-                    17 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomGif)
-                    18 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomDazzleColor)
-                    19 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomGifDazzleColor)
-                    20 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTopPicture)
-                    21 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTopGif)
-                    22 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTopDazzleColor)
-                    23 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTopGIFDazzleColor)
-                    24 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationText)
-                    25 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTexts)
+                    16 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomPicture)
+                    17 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomGif) }
+                    18 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomDazzleColor) }
+                    19 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomGifDazzleColor) }
+                    20 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTopPicture) }
+                    21 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTopGif) }
+                    22 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTopDazzleColor) }
+                    23 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTopGIFDazzleColor) }
+                    24 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationText) }
+                    25 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTexts) }
 
                     26 -> showSetLightDialog()
 
-                    27 -> {
+                    27 -> { showProgress(typeList[position].name ?: "");
                         val delList = arrayListOf<Int>()
                         delList.add(1)
                         YJDeviceManager.instance.deleteControl(delList)
@@ -142,7 +146,7 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
                         else showSetPasswordDialog()
                     }
 
-                    else -> YJDeviceManager.instance.sendCommonCmd(typeList[position].position)
+                    else -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendCommonCmd(typeList[position].position) }
                 }
             }
         })
@@ -200,12 +204,39 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
             }
             Log.e("------wtf: ",data+"_"+type)
             binding.tvResult.text = "수신 데이터:\n${data}\n전송 진행률:${progress}%"
+            updateProgress(progress)
         }
     }
 
     override fun sendFail(code: Int) {
         runOnUiThread {
             binding.tvResult.text = "전송 실패: $code"
+            progressBinding?.tvStatus?.text = "${currentSendDesc} 전송 실패: $code"
+            progressDialog?.dismiss()
+        }
+    }
+
+    private fun showProgress(desc: String) {
+        if (progressBinding == null) {
+            progressBinding = ProgressDialogLayoutBinding.inflate(layoutInflater)
+            progressDialog = AlertDialog.Builder(this)
+                .setView(progressBinding!!.root)
+                .setCancelable(false)
+                .create()
+        }
+        currentSendDesc = desc
+        progressBinding?.tvStatus?.text = "${desc} 전송 중"
+        progressBinding?.progressBar?.progress = 0
+        progressDialog?.show()
+    }
+
+    private fun updateProgress(progress: Int) {
+        progressBinding?.progressBar?.progress = progress
+        if (progress >= 100) {
+            progressBinding?.tvStatus?.text = "${currentSendDesc} 전송 완료"
+            progressDialog?.dismiss()
+        } else {
+            progressBinding?.tvStatus?.text = "${currentSendDesc} 전송 중...${progress}%"
         }
     }
 
@@ -216,6 +247,7 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
         dialogBinding.tvCancel.setOnClickListener { dialog.dismiss() }
         dialogBinding.tvConfirm.setOnClickListener {
             dialog.dismiss()
+            showProgress("밝기 설정")
             YJDeviceManager.instance.setLight(dialogBinding.seekbar.progress + 1)
         }
     }
@@ -275,6 +307,7 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
                 }
 
                 dialog.dismiss()
+                showProgress("비밀번호 설정")
                 YJDeviceManager.instance.resetPassword(getWifiSsid(),dialogBinding.etNewPasswordAgain.text.toString().trim())
         }
     }
