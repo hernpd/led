@@ -2,6 +2,9 @@ apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
 
+repositories {
+    flatDir { dirs 'libs' }
+}
 
 android {
     namespace "com.yjsoft.led"
@@ -63,7 +66,7 @@ dependencies {
 
 //    implementation project(":core")
     // Local AAR dependency
-    implementation files('libs/core-release.aar')
+    implementation(name: 'core-release', ext: 'aar')
 //    implementation 'com.google.code.gson:gson:2.8.6'
 //    implementation files('libs/yj_core.jar')
 }
