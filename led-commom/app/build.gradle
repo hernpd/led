@@ -58,7 +58,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
 //    implementation project(":core")
-    implementation (name:'core-release',ext:'aar')
+    // Local AAR dependency
     implementation files('libs/core-release.aar')
 //    implementation 'com.google.code.gson:gson:2.8.6'
 //    implementation files('libs/yj_core.jar')
