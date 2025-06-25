@@ -5,6 +5,10 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.content.Intent
+import com.yjsoft.led.ui.ScanBleActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -27,6 +31,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.toolbar)
+
         initFontDir()
         checkPermission()
 
@@ -40,6 +46,20 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.bottomNavigation.selectedItemId = R.id.navigation_operation
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == R.id.action_ble) {
+            startActivity(Intent(this, ScanBleActivity::class.java))
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
     }
 
     private fun switchFragment(fragment: Fragment) {
