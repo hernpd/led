@@ -16,10 +16,10 @@
         android:layout_height="wrap_content"
         android:columnCount="4"
         android:padding="8dp">
-        <Button android:id="@+id/btn_text1" android:text="text1" />
-        <Button android:id="@+id/btn_text2" android:text="text2" />
-        <Button android:id="@+id/btn_text3" android:text="text3" />
-        <Button android:id="@+id/btn_text4" android:text="text4" />
+        <Button android:id="@+id/btn_text1" android:text="@string/text_slot1" />
+        <Button android:id="@+id/btn_text2" android:text="@string/text_slot2" />
+        <Button android:id="@+id/btn_text3" android:text="@string/text_slot3" />
+        <Button android:id="@+id/btn_text4" android:text="@string/text_slot4" />
         <Button android:id="@+id/btn_image1" android:text="image1" />
         <Button android:id="@+id/btn_image2" android:text="image2" />
         <Button android:id="@+id/btn_image3" android:text="image3" />
