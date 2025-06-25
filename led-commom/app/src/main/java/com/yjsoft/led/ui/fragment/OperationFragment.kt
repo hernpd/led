@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.graphics.BitmapFactory
 import android.widget.Toast
 import android.widget.SeekBar
+import android.widget.ImageButton
 import com.yjsoft.core.YJDeviceManager
 import com.yjsoft.core.utils.YJZipUtils
 import com.yjsoft.led.util.ShowCmdUtil
@@ -17,6 +18,7 @@ import com.yjsoft.led.databinding.FragmentOperationBinding
 class OperationFragment : Fragment() {
     private var _binding: FragmentOperationBinding? = null
     private val binding get() = _binding!!
+    private var selectedButton: ImageButton? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentOperationBinding.inflate(inflater, container, false)
@@ -25,16 +27,30 @@ class OperationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Default text buttons are hidden for now
+        val buttons = listOf(
+            binding.btnImage1,
+            binding.btnImage2,
+            binding.btnImage3,
+            binding.btnImage4,
+            binding.btnImage5,
+            binding.btnImage6,
+            binding.btnImage7,
+            binding.btnImage8
+        )
 
-        binding.btnImage1.setOnClickListener { sendImage("images/img1.jpg") }
-        binding.btnImage2.setOnClickListener { sendImage("images/img2.jpg") }
-        binding.btnImage3.setOnClickListener { sendImage("images/img3.jpg") }
-        binding.btnImage4.setOnClickListener { sendImage("images/img4.jpg") }
-        binding.btnImage5.setOnClickListener { sendImage("images/img5.jpg") }
-        binding.btnImage6.setOnClickListener { sendImage("images/img6.jpg") }
-        binding.btnImage7.setOnClickListener { sendImage("images/img7.jpg") }
-        binding.btnImage8.setOnClickListener { sendImage("images/img8.jpg") }
+        buttons.forEachIndexed { index, button ->
+            try {
+                requireContext().assets.open("images/img${index + 1}.jpg").use { stream ->
+                    val bitmap = BitmapFactory.decodeStream(stream)
+                    button.setImageBitmap(bitmap)
+                }
+            } catch (_: Exception) {
+            }
+            button.setOnClickListener {
+                selectButton(button)
+                sendImage("images/img${index + 1}.jpg")
+            }
+        }
 
         binding.seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -52,6 +68,12 @@ class OperationFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun selectButton(button: ImageButton) {
+        selectedButton?.isSelected = false
+        selectedButton = button
+        selectedButton?.isSelected = true
     }
 
     private fun showToast(text: String) {
