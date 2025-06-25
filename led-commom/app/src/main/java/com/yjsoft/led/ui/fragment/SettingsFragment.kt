@@ -1,6 +1,9 @@
 package com.yjsoft.led.ui.fragment
 
 import android.content.Intent
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import com.yjsoft.led.util.SettingsUtils
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +30,19 @@ class SettingsFragment : Fragment() {
         }
         binding.tvBle.setOnClickListener {
             startActivity(Intent(requireContext(), BleActivity::class.java))
+        }
+
+        binding.btnStartMessage.setOnClickListener {
+            val edit = EditText(requireContext())
+            edit.setText(SettingsUtils.getStartMessage(requireContext()))
+            AlertDialog.Builder(requireContext())
+                .setTitle(R.string.update_start_message)
+                .setView(edit)
+                .setPositiveButton(android.R.string.ok) { _, _ ->
+                    SettingsUtils.setStartMessage(requireContext(), edit.text.toString())
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
         }
     }
 

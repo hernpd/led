@@ -1,9 +1,13 @@
 package com.yjsoft.led.util
 
+import android.content.Context
 import com.yjsoft.core.utils.YJUtils
+import com.yjsoft.led.util.SettingsUtils
 
 object ShowCmdUtil {
-    val text = "{\"id_dev\":\"${YJUtils.dev_id}\",\"pkts_program\":{\"id_pro\":1,\"list_region\":[{\"info_pos\":{\"h\":64,\"w\":64,\"x\":0,\"y\":0},\"list_item\":[{\"align_horizontal\":\"left\",\"align_vertical\":\"top\",\"color\":255,\"data_save\":0,\"font\":\"/storage/emulated/0/Android/data/com.yjsoft.led/cache/Led/.font/NanumS.ttf\",\"info_animate\":{\"model_normal\":1,\"speed\":10,\"time_stay\":3},\"info_border\":{\"fixed_value\":0,\"type\":\"fixed\"},\"rotate\":0,\"size\":16,\"text\":\"测试\",\"type_item\":\"text_pic\"}]}],\"property_pro\":{\"gray\":4,\"height\":64,\"send_gif_src\":1,\"type_bg\":0,\"type_color\":3,\"type_pro\":0,\"width\":64}},\"sno\":\"${YJUtils.sno}\"}"
+    fun startText(context: Context): String {
+        return textMessage(SettingsUtils.getStartMessage(context))
+    }
 
     val one_text = "{\"id_dev\":\"${YJUtils.dev_id}\",\"pkts_program\":{\"id_pro\":2,\"list_region\":[{\"info_pos\":{\"h\":64,\"w\":64,\"x\":0,\"y\":0},\"list_item\":[{\"align_horizontal\":\"left\",\"align_vertical\":\"top\",\"color\":255,\"data_save\":0,\"font\":\"/storage/emulated/0/Android/data/com.yjsoft.led/cache/Led/.font/NanumS.ttf\",\"info_animate\":{\"model_normal\":1,\"speed\":10,\"time_stay\":3},\"info_border\":{\"fixed_value\":0,\"type\":\"fixed\"},\"list_text\":[{\"color\":16711935,\"text\":\"h\"},{\"color\":65535,\"text\":\"e\"},{\"color\":65280,\"text\":\"l\"},{\"color\":16711680,\"text\":\"l\"},{\"color\":65535,\"text\":\"o\"}],\"rotate\":0,\"size\":16,\"type_item\":\"text_pic\"}]}],\"property_pro\":{\"gray\":4,\"height\":64,\"send_gif_src\":1,\"type_bg\":0,\"type_color\":3,\"type_pro\":0,\"width\":64}},\"sno\":\"${YJUtils.sno}\"}"
     val two_text = "{\"id_dev\":\"${YJUtils.dev_id}\",\"pkts_program\":{\"id_pro\":3,\"list_region\":[{\"info_pos\":{\"h\":64,\"w\":64,\"x\":0,\"y\":0},\"list_item\":[{\"align_horizontal\":\"left\",\"align_vertical\":\"top\",\"color\":255,\"data_save\":0,\"font\":\"/storage/emulated/0/Android/data/com.yjsoft.led/cache/Led/.font/NanumS.ttf\",\"info_animate\":{\"model_normal\":1,\"speed\":10,\"time_stay\":3},\"info_border\":{\"fixed_value\":0,\"type\":\"fixed\"},\"list_text\":[{\"color\":16711935,\"text\":\"he\"},{\"color\":16776960,\"text\":\"ll\"},{\"color\":65535,\"text\":\"o\"}],\"rotate\":0,\"size\":16,\"type_item\":\"text_pic\"}]}],\"property_pro\":{\"gray\":4,\"height\":64,\"send_gif_src\":1,\"type_bg\":0,\"type_color\":3,\"type_pro\":0,\"width\":64}},\"sno\":\"${YJUtils.sno}\"}"
