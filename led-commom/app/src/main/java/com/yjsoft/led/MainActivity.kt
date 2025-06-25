@@ -6,6 +6,8 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -17,6 +19,7 @@ import android.content.Context.MODE_PRIVATE
 import com.yjsoft.led.ui.fragment.OperationFragment
 import com.yjsoft.led.ui.fragment.SettingsFragment
 import com.yjsoft.led.ui.fragment.StatusFragment
+import com.yjsoft.led.ui.BleScanDialogFragment
 import com.yjsoft.led.util.FileUtils
 import com.yjsoft.led.databinding.ActivityMainBinding
 import java.io.File
@@ -30,6 +33,7 @@ class MainActivity : AppCompatActivity(), YJCallBack {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
 
         val prefs = getSharedPreferences("ble_device", MODE_PRIVATE)
         savedMac = prefs.getString("mac", null)
@@ -99,6 +103,21 @@ class MainActivity : AppCompatActivity(), YJCallBack {
         if (savedMac != null) {
             YJDeviceManager.instance.setCallBack(this)
             YJDeviceManager.instance.scan()
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_ble -> {
+                BleScanDialogFragment().show(supportFragmentManager, "bleScan")
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
