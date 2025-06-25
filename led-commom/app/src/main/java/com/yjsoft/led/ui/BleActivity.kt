@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.yjsoft.led.databinding.ProgressDialogLayoutBinding
@@ -22,7 +21,6 @@ import com.yjsoft.led.adapter.BleAdapter
 import com.yjsoft.led.adapter.WifiAdapter
 import com.yjsoft.led.util.ShowCmdUtil
 import com.yjsoft.led.databinding.ActivityBleBinding
-import com.yjsoft.led.databinding.LightSeekbarLayoutBinding
 import java.io.ByteArrayOutputStream
 
 class BleActivity : AppCompatActivity(), YJCallBack {
@@ -138,7 +136,9 @@ class BleActivity : AppCompatActivity(), YJCallBack {
                     23 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationText) }
                     24 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTexts) }
 
-                    25 -> showSetLightDialog()
+                    25 -> {
+                        // Brightness control moved to OperationFragment
+                    }
                     26 -> {
                         showProgress(typeList[position])
                         val delList = arrayListOf<Int>()
@@ -247,15 +247,4 @@ class BleActivity : AppCompatActivity(), YJCallBack {
         }
     }
 
-    @SuppressLint("InflateParams")
-    private fun showSetLightDialog(){
-        val dialogBinding = LightSeekbarLayoutBinding.inflate(LayoutInflater.from(this))
-        val dialog = AlertDialog.Builder(this).setView(dialogBinding.root).show()
-        dialogBinding.tvCancel.setOnClickListener { dialog.dismiss() }
-        dialogBinding.tvConfirm.setOnClickListener {
-            dialog.dismiss()
-            showProgress("밝기 설정")
-            YJDeviceManager.instance.setLight(dialogBinding.seekbar.progress + 1)
-        }
-    }
 }

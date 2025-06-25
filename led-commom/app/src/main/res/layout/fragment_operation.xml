@@ -39,4 +39,17 @@
         <Button android:id="@+id/btn_image7" android:text="image7" />
         <Button android:id="@+id/btn_image8" android:text="image8" />
     </GridLayout>
+
+    <SeekBar
+        android:id="@+id/seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="14"
+        android:maxHeight="3dp"
+        android:minHeight="3dp"
+        android:progress="0"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:progressDrawable="@drawable/seekbar_shape"
+        android:thumb="@drawable/selector_thumb_bar" />
 </LinearLayout>

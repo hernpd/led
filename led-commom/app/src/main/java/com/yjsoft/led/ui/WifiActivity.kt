@@ -20,7 +20,6 @@ import com.yjsoft.led.bean.TypeBean
 import com.yjsoft.led.bean.WifiPasswordBean
 import com.yjsoft.led.util.ShowCmdUtil
 import com.yjsoft.led.databinding.ActivityWifiBinding
-import com.yjsoft.led.databinding.LightSeekbarLayoutBinding
 import com.yjsoft.led.databinding.SetPasswordLayoutBinding
 import com.yjsoft.led.databinding.ProgressDialogLayoutBinding
 import java.io.ByteArrayOutputStream
@@ -144,7 +143,9 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
                     24 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationText) }
                     25 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationTexts) }
 
-                    26 -> showSetLightDialog()
+                    26 -> {
+                        // Brightness control moved to OperationFragment
+                    }
 
                     27 -> { showProgress(typeList[position].name ?: "");
                         val delList = arrayListOf<Int>()
@@ -256,17 +257,6 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
         }
     }
 
-    @SuppressLint("InflateParams")
-    private fun showSetLightDialog(){
-        val dialogBinding = LightSeekbarLayoutBinding.inflate(LayoutInflater.from(this))
-        val dialog = AlertDialog.Builder(this).setView(dialogBinding.root).show()
-        dialogBinding.tvCancel.setOnClickListener { dialog.dismiss() }
-        dialogBinding.tvConfirm.setOnClickListener {
-            dialog.dismiss()
-            showProgress("밝기 설정")
-            YJDeviceManager.instance.setLight(dialogBinding.seekbar.progress + 1)
-        }
-    }
 
     @SuppressLint("InflateParams")
     private fun showSetPasswordDialog(){
