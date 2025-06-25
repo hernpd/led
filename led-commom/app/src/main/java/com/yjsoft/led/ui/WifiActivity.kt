@@ -104,11 +104,17 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
                     13 -> YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.prospects_gif_with_text)
                     14 -> {
 //                        YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.picture)
-
-                          val fileStream = assets.open("source/保持车距.jpg")
-                          val bitmap = BitmapFactory.decodeStream(fileStream)
-                          val json = YJZipUtils.zipPicture(bitmap)
-                          YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.picture(json))
+                        try {
+                            assets.open("images/img1.jpg").use { fileStream ->
+                                val bitmap = BitmapFactory.decodeStream(fileStream)
+                                val json = YJZipUtils.zipPicture(bitmap)
+                                YJDeviceManager.instance.sendShowCommon(
+                                    ShowCmdUtil.picture(json)
+                                )
+                            }
+                        } catch (e: Exception) {
+                            ToastShow("이미지를 불러올 수 없습니다")
+                        }
                     }
                     15 -> {
                         val gifByteArray = gifByteArray()
@@ -150,18 +156,22 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
         YJDeviceManager.instance.setCallBack(this)
     }
 
-    private fun gifByteArray(): ByteArray{
-        val stream = assets.open("source/保持车距.gif")
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        var len: Int
-        val b = ByteArray(1024)
-        while (((stream.read(b)).also { len = it }) != -1) {
-            byteArrayOutputStream.write(b, 0, len)
+    private fun gifByteArray(): ByteArray {
+        return try {
+            assets.open("images/img1.jpg").use { stream ->
+                val byteArrayOutputStream = ByteArrayOutputStream()
+                var len: Int
+                val b = ByteArray(1024)
+                while (stream.read(b).also { len = it } != -1) {
+                    byteArrayOutputStream.write(b, 0, len)
+                }
+                byteArrayOutputStream.flush()
+                byteArrayOutputStream.toByteArray()
+            }
+        } catch (e: Exception) {
+            ToastShow("파일을 불러올 수 없습니다")
+            ByteArray(0)
         }
-        byteArrayOutputStream.flush()
-        byteArrayOutputStream.close()
-
-        return byteArrayOutputStream.toByteArray()
     }
 
     override fun onScanning(yjBleDevice: YJBleDevice) {
