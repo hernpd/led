@@ -5,6 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.graphics.BitmapFactory
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Movie
+import java.io.ByteArrayInputStream
 import android.widget.Toast
 import android.widget.SeekBar
 import android.widget.ImageButton
@@ -39,16 +43,26 @@ class OperationFragment : Fragment() {
         )
 
         buttons.forEachIndexed { index, button ->
+            val gifPath = "images/img${index + 1}.gif"
+            val jpgPath = "images/img${index + 1}.jpg"
+            val assetManager = requireContext().assets
+            val path = if (assetExists(assetManager, gifPath)) gifPath else jpgPath
+
             try {
-                requireContext().assets.open("images/img${index + 1}.jpg").use { stream ->
-                    val bitmap = BitmapFactory.decodeStream(stream)
-                    button.setImageBitmap(bitmap)
+                assetManager.open(path).use { stream ->
+                    val bitmap = if (path.endsWith(".gif")) {
+                        decodeGifFirstFrame(stream.readBytes())
+                    } else {
+                        BitmapFactory.decodeStream(stream)
+                    }
+                    bitmap?.let { button.setImageBitmap(it) }
                 }
             } catch (_: Exception) {
             }
+
             button.setOnClickListener {
                 selectButton(button)
-                sendImage("images/img${index + 1}.jpg")
+                sendImage(path)
             }
         }
 
@@ -88,12 +102,14 @@ class OperationFragment : Fragment() {
     private fun sendImage(assetPath: String) {
         try {
             requireContext().assets.open(assetPath).use { stream ->
+                val bytes = stream.readBytes()
                 if (assetPath.endsWith(".gif", true)) {
-                    val bytes = stream.readBytes()
+                    val bitmap = decodeGifFirstFrame(bytes)
+                    bitmap?.let { binding.previewImage.setImageBitmap(it) }
                     val zip = YJZipUtils.zipGif(bytes)
                     YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.gif(zip))
                 } else {
-                    val bitmap = BitmapFactory.decodeStream(stream)
+                    val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                     binding.previewImage.setImageBitmap(bitmap)
                     val zip = YJZipUtils.zipPicture(bitmap)
                     YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.picture(zip))
@@ -101,6 +117,28 @@ class OperationFragment : Fragment() {
             }
         } catch (e: Exception) {
             showToast(assetPath)
+        }
+    }
+
+    private fun assetExists(assetManager: android.content.res.AssetManager, path: String): Boolean {
+        return try {
+            assetManager.open(path).close()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    private fun decodeGifFirstFrame(bytes: ByteArray): Bitmap? {
+        return try {
+            val movie = Movie.decodeByteArray(bytes, 0, bytes.size) ?: return null
+            val bitmap = Bitmap.createBitmap(movie.width(), movie.height(), Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+            movie.setTime(0)
+            movie.draw(canvas, 0f, 0f)
+            bitmap
+        } catch (e: Exception) {
+            null
         }
     }
 }

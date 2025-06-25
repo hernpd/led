@@ -157,7 +157,8 @@ class BleActivity : AppCompatActivity(), YJCallBack {
 
     private fun gifByteArray(): ByteArray {
         return try {
-            assets.open("images/img1.jpg").use { stream ->
+            val path = if (assetExists("images/img1.gif")) "images/img1.gif" else "images/img1.jpg"
+            assets.open(path).use { stream ->
                 val byteArrayOutputStream = ByteArrayOutputStream()
                 var len: Int
                 val b = ByteArray(1024)
@@ -244,6 +245,15 @@ class BleActivity : AppCompatActivity(), YJCallBack {
             progressDialog?.dismiss()
         } else {
             progressBinding?.tvStatus?.text = "${currentSendDesc} 전송 중...${progress}%"
+        }
+    }
+
+    private fun assetExists(path: String): Boolean {
+        return try {
+            assets.open(path).close()
+            true
+        } catch (_: Exception) {
+            false
         }
     }
 
