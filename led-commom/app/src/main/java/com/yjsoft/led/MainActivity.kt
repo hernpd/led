@@ -11,6 +11,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.yjsoft.core.YJDeviceManager
+import com.yjsoft.core.bean.YJBleDevice
+import com.yjsoft.core.controler.YJCallBack
+import android.content.Context.MODE_PRIVATE
 import com.yjsoft.led.ui.fragment.OperationFragment
 import com.yjsoft.led.ui.fragment.SettingsFragment
 import com.yjsoft.led.ui.fragment.StatusFragment
@@ -18,14 +21,18 @@ import com.yjsoft.led.util.FileUtils
 import com.yjsoft.led.databinding.ActivityMainBinding
 import java.io.File
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), YJCallBack {
     private lateinit var binding: ActivityMainBinding
     private val requestCode = 0x600
+    private var savedMac: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val prefs = getSharedPreferences("ble_device", MODE_PRIVATE)
+        savedMac = prefs.getString("mac", null)
 
         initFontDir()
         checkPermission()
@@ -61,6 +68,7 @@ class MainActivity : AppCompatActivity() {
 
         if (denied.isEmpty()) {
             YJDeviceManager.instance.init(this.application)
+            checkAutoConnect()
         } else {
             ActivityCompat.requestPermissions(this, denied.toTypedArray(), requestCode)
         }
@@ -71,6 +79,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == this.requestCode) {
             if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
                 YJDeviceManager.instance.init(this.application)
+                checkAutoConnect()
             } else {
                 finish()
             }
@@ -85,4 +94,25 @@ class MainActivity : AppCompatActivity() {
             FileUtils.copyAssetsFiles(this, "font", file.absolutePath)
         }
     }
+
+    private fun checkAutoConnect() {
+        if (savedMac != null) {
+            YJDeviceManager.instance.setCallBack(this)
+            YJDeviceManager.instance.scan()
+        }
+    }
+
+    override fun onScanning(yjBleDevice: YJBleDevice) {
+        if (savedMac != null && savedMac == yjBleDevice.mac) {
+            YJDeviceManager.instance.connect(yjBleDevice)
+        }
+    }
+
+    override fun onScanStarted() {}
+    override fun startConnect() {}
+    override fun connectFail() {}
+    override fun connectSuccess() {}
+    override fun disConnected() {}
+    override fun resultData(data: String, progress: Int, type: Int) {}
+    override fun sendFail(code: Int) {}
 }

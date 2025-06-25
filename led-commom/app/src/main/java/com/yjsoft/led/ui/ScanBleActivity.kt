@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.app.ProgressDialog
 import android.bluetooth.BluetoothAdapter
 import android.content.pm.PackageManager
+import android.content.Context.MODE_PRIVATE
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -174,6 +175,14 @@ class ScanBleActivity : AppCompatActivity(), YJCallBack {
             hideProgressDialog()
             if (clickPosition > -1)
                 yjBleDevice = deviceList[clickPosition]
+
+            yjBleDevice?.let {
+                getSharedPreferences("ble_device", MODE_PRIVATE)
+                    .edit()
+                    .putString("mac", it.mac)
+                    .putString("name", it.name)
+                    .apply()
+            }
 
             Toast.makeText(this, "연결 성공", Toast.LENGTH_SHORT).show()
             finish()
