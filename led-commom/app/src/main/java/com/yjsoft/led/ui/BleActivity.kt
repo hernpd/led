@@ -93,7 +93,7 @@ class BleActivity : AppCompatActivity(), YJCallBack {
                         }else startActivity(Intent(this@BleActivity,ScanBleActivity::class.java))
                     }
 
-                    5 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.text) }
+                    5 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.startText(this@BleActivity)) }
                     6 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.one_text) }
                     7 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.two_text) }
                     8 -> { showProgress(typeList[position]); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.line_text) }

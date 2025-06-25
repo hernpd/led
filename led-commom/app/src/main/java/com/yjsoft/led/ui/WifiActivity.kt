@@ -97,7 +97,7 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
             override fun OnClickListener(position: Int) {
                 binding.tvResult.text = ""
                 when (typeList[position].position) {
-                    6 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.text) }
+                    6 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.startText(this@WifiActivity)) }
                     7 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.one_text) }
                     8 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.two_text) }
                     9 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.line_text) }
