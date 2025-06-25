@@ -15,7 +15,6 @@ import com.yjsoft.core.YJDeviceManager
 import com.yjsoft.core.bean.YJBleDevice
 import com.yjsoft.core.controler.YJCallBack
 import com.yjsoft.core.utils.YJZipUtils
-import android.graphics.Movie
 import com.yjsoft.led.adapter.WifiAdapter
 import com.yjsoft.led.bean.TypeBean
 import com.yjsoft.led.bean.WifiPasswordBean
@@ -113,9 +112,7 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
                             assets.open("images/img1.jpg").use { stream ->
                                 val bitmap = BitmapFactory.decodeStream(stream)
                                 val json = YJZipUtils.zipPicture(bitmap)
-                                YJDeviceManager.instance.sendShowCommon(
-                                    ShowCmdUtil.picture(json, bitmap.width, bitmap.height)
-                                )
+                                YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.picture(json))
                             }
                         } catch (e: Exception) {
                             e.printStackTrace()
@@ -127,12 +124,7 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
                         try {
                             val gifByteArray = gifByteArray()
                             val gif = YJZipUtils.zipGif(gifByteArray)
-                            val movie = Movie.decodeByteArray(gifByteArray, 0, gifByteArray.size)
-                            val w = movie?.width() ?: 64
-                            val h = movie?.height() ?: 64
-                            YJDeviceManager.instance.sendShowCommon(
-                                ShowCmdUtil.gif(gif, w, h)
-                            )
+                            YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.gif(gif))
                         } catch (e: Exception) {
                             e.printStackTrace()
                             Toast.makeText(this@WifiActivity, "GIF을 불러올 수 없습니다", Toast.LENGTH_SHORT).show()
