@@ -121,7 +121,7 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
                     }
 
 
-                    16 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomPicture)
+                    16 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomPicture) }
                     17 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomGif) }
                     18 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomDazzleColor) }
                     19 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.combinationBottomGifDazzleColor) }
