@@ -4,6 +4,7 @@ import android.content.Intent
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import com.yjsoft.led.util.SettingsUtils
+import com.yjsoft.core.utils.YJUtils
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,6 +26,7 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        SettingsUtils.applyScreenSize(requireContext())
         binding.tvWifi.setOnClickListener {
             startActivity(Intent(requireContext(), WifiActivity::class.java))
         }
@@ -40,6 +42,22 @@ class SettingsFragment : Fragment() {
                 .setView(edit)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
                     SettingsUtils.setStartMessage(requireContext(), edit.text.toString())
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
+        }
+
+        binding.btnScreenSize.setOnClickListener {
+            val options = arrayOf("64 x 64", "128 x 96")
+            val checked = if (SettingsUtils.getScreenWidth(requireContext()) == 128) 1 else 0
+            AlertDialog.Builder(requireContext())
+                .setTitle(R.string.select_screen_size)
+                .setSingleChoiceItems(options, checked) { dialog, which ->
+                    val (w, h) = if (which == 0) 64 to 64 else 128 to 96
+                    SettingsUtils.setScreenSize(requireContext(), w, h)
+                    YJUtils.setScreenWidth(w)
+                    YJUtils.setScreenHeight(h)
+                    dialog.dismiss()
                 }
                 .setNegativeButton(android.R.string.cancel, null)
                 .show()
