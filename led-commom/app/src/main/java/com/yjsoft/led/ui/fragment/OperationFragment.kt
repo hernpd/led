@@ -24,25 +24,16 @@ class OperationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val t1 = getString(R.string.text_slot1)
-        val t2 = getString(R.string.text_slot2)
-        val t3 = getString(R.string.text_slot3)
-        val t4 = getString(R.string.text_slot4)
-
-        binding.btnText1.text = t1
-        binding.btnText2.text = t2
-        binding.btnText3.text = t3
-        binding.btnText4.text = t4
-
-        binding.btnText1.setOnClickListener { sendText(t1) }
-        binding.btnText2.setOnClickListener { sendText(t2) }
-        binding.btnText3.setOnClickListener { sendText(t3) }
-        binding.btnText4.setOnClickListener { sendText(t4) }
+        // Default text buttons are hidden for now
 
         binding.btnImage1.setOnClickListener { sendImage("images/img1.jpg") }
         binding.btnImage2.setOnClickListener { sendImage("images/img2.jpg") }
         binding.btnImage3.setOnClickListener { sendImage("images/img3.jpg") }
         binding.btnImage4.setOnClickListener { sendImage("images/img4.jpg") }
+        binding.btnImage5.setOnClickListener { sendImage("images/img5.jpg") }
+        binding.btnImage6.setOnClickListener { sendImage("images/img6.jpg") }
+        binding.btnImage7.setOnClickListener { sendImage("images/img7.jpg") }
+        binding.btnImage8.setOnClickListener { sendImage("images/img8.jpg") }
     }
 
     override fun onDestroyView() {

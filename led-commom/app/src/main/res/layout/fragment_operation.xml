@@ -16,13 +16,27 @@
         android:layout_height="wrap_content"
         android:columnCount="4"
         android:padding="8dp">
-        <Button android:id="@+id/btn_text1" android:text="@string/text_slot1" />
-        <Button android:id="@+id/btn_text2" android:text="@string/text_slot2" />
-        <Button android:id="@+id/btn_text3" android:text="@string/text_slot3" />
-        <Button android:id="@+id/btn_text4" android:text="@string/text_slot4" />
+        <!--
+        <Button
+            android:id="@+id/btn_text1"
+            android:text="@string/text_slot1" />
+        <Button
+            android:id="@+id/btn_text2"
+            android:text="@string/text_slot2" />
+        <Button
+            android:id="@+id/btn_text3"
+            android:text="@string/text_slot3" />
+        <Button
+            android:id="@+id/btn_text4"
+            android:text="@string/text_slot4" />
+        -->
         <Button android:id="@+id/btn_image1" android:text="image1" />
         <Button android:id="@+id/btn_image2" android:text="image2" />
         <Button android:id="@+id/btn_image3" android:text="image3" />
         <Button android:id="@+id/btn_image4" android:text="image4" />
+        <Button android:id="@+id/btn_image5" android:text="image5" />
+        <Button android:id="@+id/btn_image6" android:text="image6" />
+        <Button android:id="@+id/btn_image7" android:text="image7" />
+        <Button android:id="@+id/btn_image8" android:text="image8" />
     </GridLayout>
 </LinearLayout>
