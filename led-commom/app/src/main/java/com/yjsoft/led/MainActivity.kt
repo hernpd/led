@@ -70,7 +70,16 @@ class MainActivity : AppCompatActivity(), YJCallBack {
             permissions.add(Manifest.permission.BLUETOOTH_CONNECT)
         }
 
-        ActivityCompat.requestPermissions(this, permissions.toTypedArray(), requestCode)
+        val denied = permissions.filter {
+            ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+        }
+
+        if (denied.isEmpty()) {
+            YJDeviceManager.instance.init(this.application)
+            checkAutoConnect()
+        } else {
+            ActivityCompat.requestPermissions(this, denied.toTypedArray(), requestCode)
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
