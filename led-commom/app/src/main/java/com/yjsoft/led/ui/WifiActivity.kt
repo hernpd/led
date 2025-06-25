@@ -108,16 +108,28 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
                     13 -> { showProgress(typeList[position].name ?: ""); YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.prospects_gif_with_text) }
                     14 -> {
 //                        YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.picture)
-
-                          val fileStream = assets.open("source/保持车距.jpg")
-                          val bitmap = BitmapFactory.decodeStream(fileStream)
-                          val json = YJZipUtils.zipPicture(bitmap)
-                          YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.picture(json))
+                        showProgress(typeList[position].name ?: "")
+                        try {
+                            assets.open("images/img1.jpg").use { stream ->
+                                val bitmap = BitmapFactory.decodeStream(stream)
+                                val json = YJZipUtils.zipPicture(bitmap)
+                                YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.picture(json))
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            Toast.makeText(this@WifiActivity, "이미지를 불러올 수 없습니다", Toast.LENGTH_SHORT).show()
+                        }
                     }
                     15 -> {
-                        val gifByteArray = gifByteArray()
-                        val gif = YJZipUtils.zipGif(gifByteArray)
-                        YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.gif(gif))
+                        showProgress(typeList[position].name ?: "")
+                        try {
+                            val gifByteArray = gifByteArray()
+                            val gif = YJZipUtils.zipGif(gifByteArray)
+                            YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.gif(gif))
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            Toast.makeText(this@WifiActivity, "GIF을 불러올 수 없습니다", Toast.LENGTH_SHORT).show()
+                        }
                     }
 
 
@@ -154,18 +166,22 @@ class WifiActivity : AppCompatActivity(), YJCallBack {
         YJDeviceManager.instance.setCallBack(this)
     }
 
-    private fun gifByteArray(): ByteArray{
-        val stream = assets.open("source/保持车距.gif")
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        var len: Int
-        val b = ByteArray(1024)
-        while (((stream.read(b)).also { len = it }) != -1) {
-            byteArrayOutputStream.write(b, 0, len)
+    private fun gifByteArray(): ByteArray {
+        return try {
+            assets.open("images/img1.jpg").use { stream ->
+                val byteArrayOutputStream = ByteArrayOutputStream()
+                var len: Int
+                val b = ByteArray(1024)
+                while (((stream.read(b)).also { len = it }) != -1) {
+                    byteArrayOutputStream.write(b, 0, len)
+                }
+                byteArrayOutputStream.flush()
+                byteArrayOutputStream.toByteArray()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ByteArray(0)
         }
-        byteArrayOutputStream.flush()
-        byteArrayOutputStream.close()
-
-        return byteArrayOutputStream.toByteArray()
     }
 
     override fun onScanning(yjBleDevice: YJBleDevice) {
