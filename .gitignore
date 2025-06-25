@@ -1,0 +1,16 @@
+# macOS system files
+.DS_Store
+
+# Gradle build directories and releases
+**/build/
+**/release/
+
+# Build artifacts
+*.apk
+*.aar
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
