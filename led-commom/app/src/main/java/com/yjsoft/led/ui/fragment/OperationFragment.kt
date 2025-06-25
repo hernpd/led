@@ -15,7 +15,6 @@ import android.widget.ImageButton
 import com.yjsoft.core.YJDeviceManager
 import com.yjsoft.core.utils.YJZipUtils
 import com.yjsoft.led.util.ShowCmdUtil
-import com.yjsoft.led.util.SettingsUtils
 import androidx.fragment.app.Fragment
 import com.yjsoft.led.R
 import com.yjsoft.led.databinding.FragmentOperationBinding
@@ -32,7 +31,6 @@ class OperationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        SettingsUtils.applyScreenSize(requireContext())
         val buttons = listOf(
             binding.btnImage1,
             binding.btnImage2,
@@ -109,18 +107,12 @@ class OperationFragment : Fragment() {
                     val bitmap = decodeGifFirstFrame(bytes)
                     bitmap?.let { binding.previewImage.setImageBitmap(it) }
                     val zip = YJZipUtils.zipGif(bytes)
-                    if (bitmap != null) {
-                        YJDeviceManager.instance.sendShowCommon(
-                            ShowCmdUtil.gif(zip, bitmap.width, bitmap.height)
-                        )
-                    }
+                    YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.gif(zip))
                 } else {
                     val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                     binding.previewImage.setImageBitmap(bitmap)
                     val zip = YJZipUtils.zipPicture(bitmap)
-                    YJDeviceManager.instance.sendShowCommon(
-                        ShowCmdUtil.picture(zip, bitmap.width, bitmap.height)
-                    )
+                    YJDeviceManager.instance.sendShowCommon(ShowCmdUtil.picture(zip))
                 }
             }
         } catch (e: Exception) {
