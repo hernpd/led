@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.graphics.BitmapFactory
 import android.widget.Toast
+import android.widget.SeekBar
 import com.yjsoft.core.YJDeviceManager
 import com.yjsoft.core.utils.YJZipUtils
 import com.yjsoft.led.util.ShowCmdUtil
@@ -34,6 +35,18 @@ class OperationFragment : Fragment() {
         binding.btnImage6.setOnClickListener { sendImage("images/img6.jpg") }
         binding.btnImage7.setOnClickListener { sendImage("images/img7.jpg") }
         binding.btnImage8.setOnClickListener { sendImage("images/img8.jpg") }
+
+        binding.seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    YJDeviceManager.instance.setLight(progress + 1)
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
     }
 
     override fun onDestroyView() {
