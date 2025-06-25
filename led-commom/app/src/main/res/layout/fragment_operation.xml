@@ -30,14 +30,62 @@
             android:id="@+id/btn_text4"
             android:text="@string/text_slot4" />
         -->
-        <Button android:id="@+id/btn_image1" android:text="image1" />
-        <Button android:id="@+id/btn_image2" android:text="image2" />
-        <Button android:id="@+id/btn_image3" android:text="image3" />
-        <Button android:id="@+id/btn_image4" android:text="image4" />
-        <Button android:id="@+id/btn_image5" android:text="image5" />
-        <Button android:id="@+id/btn_image6" android:text="image6" />
-        <Button android:id="@+id/btn_image7" android:text="image7" />
-        <Button android:id="@+id/btn_image8" android:text="image8" />
+        <ImageButton
+            android:id="@+id/btn_image1"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_columnWeight="1"
+            android:background="@drawable/image_button_selector"
+            android:scaleType="centerCrop" />
+        <ImageButton
+            android:id="@+id/btn_image2"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_columnWeight="1"
+            android:background="@drawable/image_button_selector"
+            android:scaleType="centerCrop" />
+        <ImageButton
+            android:id="@+id/btn_image3"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_columnWeight="1"
+            android:background="@drawable/image_button_selector"
+            android:scaleType="centerCrop" />
+        <ImageButton
+            android:id="@+id/btn_image4"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_columnWeight="1"
+            android:background="@drawable/image_button_selector"
+            android:scaleType="centerCrop" />
+        <ImageButton
+            android:id="@+id/btn_image5"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_columnWeight="1"
+            android:background="@drawable/image_button_selector"
+            android:scaleType="centerCrop" />
+        <ImageButton
+            android:id="@+id/btn_image6"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_columnWeight="1"
+            android:background="@drawable/image_button_selector"
+            android:scaleType="centerCrop" />
+        <ImageButton
+            android:id="@+id/btn_image7"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_columnWeight="1"
+            android:background="@drawable/image_button_selector"
+            android:scaleType="centerCrop" />
+        <ImageButton
+            android:id="@+id/btn_image8"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_columnWeight="1"
+            android:background="@drawable/image_button_selector"
+            android:scaleType="centerCrop" />
     </GridLayout>
 
     <SeekBar
