@@ -127,7 +127,9 @@ class ScanBleActivity : AppCompatActivity(), YJCallBack {
 
     override fun onScanning(yjBleDevice: YJBleDevice) {
         runOnUiThread {
-            if (!checkDevice(yjBleDevice.mac)) {
+            if ((yjBleDevice.name?.startsWith("YS") == true ||
+                    yjBleDevice.name?.startsWith("LED") == true) &&
+                !checkDevice(yjBleDevice.mac)) {
                 deviceList.add(yjBleDevice)
                 deviceListAdapter?.notifyDataSetChanged()
             }
