@@ -16,6 +16,10 @@ import com.yjsoft.core.YJDeviceManager
 import com.yjsoft.core.bean.YJBleDevice
 import com.yjsoft.core.controler.YJCallBack
 import android.content.Context.MODE_PRIVATE
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
+import androidx.appcompat.app.AlertDialog
 import com.yjsoft.led.ui.fragment.OperationFragment
 import com.yjsoft.led.ui.fragment.SettingsFragment
 import com.yjsoft.led.ui.fragment.StatusFragment
@@ -85,9 +89,28 @@ class MainActivity : AppCompatActivity(), YJCallBack {
                 YJDeviceManager.instance.init(this.application)
                 checkAutoConnect()
             } else {
-                finish()
+                showPermissionExplanation()
             }
         }
+    }
+
+    private fun showPermissionExplanation() {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.permission_required_title))
+            .setMessage(getString(R.string.permission_required_message))
+            .setCancelable(false)
+            .setPositiveButton(getString(R.string.action_open_settings)) { _, _ ->
+                val intent = Intent(
+                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.fromParts("package", packageName, null)
+                )
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
+            .setNegativeButton(getString(R.string.action_retry)) { _, _ ->
+                checkPermission()
+            }
+            .show()
     }
 
     private fun initFontDir() {
